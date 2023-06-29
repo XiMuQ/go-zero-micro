@@ -1,6 +1,7 @@
 package ucenter
 
 import (
+	"go-zero-micro/common/response"
 	"net/http"
 
 	"github.com/zeromicro/go-zero/rest/httpx"
@@ -19,10 +20,12 @@ func QueryUserByPathHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 
 		l := ucenter.NewQueryUserByPathLogic(r.Context(), svcCtx)
 		resp, err := l.QueryUserByPath(&req)
-		if err != nil {
-			httpx.ErrorCtx(r.Context(), w, err)
-		} else {
-			httpx.OkJsonCtx(r.Context(), w, resp)
-		}
+		//if err != nil {
+		//	httpx.ErrorCtx(r.Context(), w, err)
+		//} else {
+		//	httpx.OkJsonCtx(r.Context(), w, resp)
+		//}
+
+		response.Response(r.Context(), w, resp, err)
 	}
 }

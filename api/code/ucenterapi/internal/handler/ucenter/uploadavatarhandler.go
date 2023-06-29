@@ -1,6 +1,7 @@
 package ucenter
 
 import (
+	"go-zero-micro/common/response"
 	"net/http"
 
 	"github.com/zeromicro/go-zero/rest/httpx"
@@ -19,10 +20,12 @@ func UploadAvatarHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 
 		l := ucenter.NewUploadAvatarLogic(r.Context(), svcCtx)
 		resp, err := l.UploadAvatar(&req)
-		if err != nil {
-			httpx.ErrorCtx(r.Context(), w, err)
-		} else {
-			httpx.OkJsonCtx(r.Context(), w, resp)
-		}
+		//if err != nil {
+		//	httpx.ErrorCtx(r.Context(), w, err)
+		//} else {
+		//	httpx.OkJsonCtx(r.Context(), w, resp)
+		//}
+
+		response.Response(r.Context(), w, resp, err)
 	}
 }
