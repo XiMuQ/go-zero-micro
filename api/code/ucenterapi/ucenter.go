@@ -12,7 +12,7 @@ import (
 	"github.com/zeromicro/go-zero/rest"
 )
 
-var configFile = flag.String("f", "api/code/ucenterapi/etc/ucenter-api.yaml", "the config file")
+var configFile = flag.String("f", "conf/dev/api/ucenter-api.yaml", "the config file")
 
 func main() {
 	flag.Parse()

@@ -1,0 +1,26 @@
+Name: ucenter-api
+Host: 0.0.0.0
+Port: 8888
+
+Auth:
+  AccessSecret: 1a3201qa-8b3d-ed0a-05eb-2e9c9b74f6b7
+  AccessExpire: 86400
+
+#web请求到此api服务的超时时间
+Timeout: 10000
+# 将请求体最大允许字节数从1MB改为1000MB
+MaxBytes: 1048576000
+
+#文件
+UploadFile:
+  MaxFileNum: 1000
+  MaxFileSize: 1048576000  # 1000MB
+  SavePath: projects/go-zero-micro/uploadFiles/
+
+#日志配置
+Log:
+  Mode: file
+  Path: log/go-zero-micro
+  Level: error
+  Compress: true
+  KeepDays: 180
