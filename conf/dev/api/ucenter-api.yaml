@@ -17,6 +17,15 @@ UploadFile:
   MaxFileSize: 1048576000  # 1000MB
   SavePath: projects/go-zero-micro/uploadFiles/
 
+# UCenter 服务
+UCenterRpc:
+  Etcd:
+    Hosts:
+      - 127.0.0.1:2379
+    Key: ucenter.rpc
+  #api请求rpc服务的超时时间
+  Timeout: 10000
+
 #日志配置
 Log:
   Mode: file
