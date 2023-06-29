@@ -1,0 +1,39 @@
+syntax = "v1"
+
+info(
+	title : "go-zero-micro"
+	desc: "公共model"
+	author: "ximuqi"
+	email: "xxx"
+	version: "0.0.1"
+)
+
+type (
+	/* 1 公用类 */
+	BaseModel {
+		Id   int64  `json:"id"`            // id
+		Name string `json:"name,optional"` // 名称
+		Data string `json:"data,optional"` // 数据
+	}
+
+	/* 2 公用类 id集合 */
+	BaseIdList {
+		IdList []int64 `json:"idList"` // id集合
+	}
+
+	/* 3 公用类 Data集合 */
+	BaseDataList {
+		DataList []string `json:"dateList"` // Data集合
+	}
+
+	/* 4 公用类 Id-form */
+	BaseId {
+		Id int64 `form:"id"` // id
+	}
+
+	/* 5 公用类 Path */
+	PathReq {
+		Id   int64  `path:"id"`   // id
+		Name string `path:"name"` // 名称
+	}
+)

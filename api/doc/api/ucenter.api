@@ -1,0 +1,71 @@
+syntax = "v1"
+
+info(
+	title : "go-zero-micro"
+	desc: "userapi"
+	author: "ximuqi"
+	email: "xxx"
+	version: "0.0.1"
+)
+
+@server(
+	jwt: Auth
+	middleware: Check
+	group: ucenter
+	prefix: /ucenter
+)
+service ucenter-api {
+	@doc(
+		summary: "1 用户列表数据"
+	)
+	@handler getUserPageList
+	post /getUserPageList (UserListReq) returns (UserPageResp)
+
+	@doc(
+		summary: "2 用户详情"
+	)
+	@handler getUserById
+	get /getUserById (BaseId) returns (UserModel)
+
+	@doc(
+		summary: "3 添加用户"
+	)
+	@handler addUser
+	post /addUser (UserSimpleModel) returns (BaseModel)
+
+	@doc(
+		summary: "4 查询用户"
+	)
+	@handler QueryUserByPath
+	get /path/:id/:name (PathReq) returns (BaseModel)
+
+	@doc(
+		summary: "5 上传头像"
+	)
+	@handler uploadAvatar
+	post /uploadAvatar (FileUploadReq) returns (BaseModel)
+}
+
+@server(
+	group: ucenter
+	prefix: /ucenter
+)
+service ucenter-api {
+	@doc(
+		summary: "1 校验账号是否已存在"
+	)
+	@handler getUserByAccount
+	get /getUserByAccount (UserSimpleModel) returns (BaseModel)
+}
+
+@server(
+	group: login
+	prefix: /login
+)
+service ucenter-api {
+	@doc(
+		summary: "9 用户账号密码登录"
+	)
+	@handler loginByPassword
+	post /loginByPassword (UserLoginPasswordModel) returns (UserLoginResp)
+}

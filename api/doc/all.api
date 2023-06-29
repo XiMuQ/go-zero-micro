@@ -1,0 +1,12 @@
+import "/base/common.api"
+import "/database/usermodel.api"
+
+import "/api/ucenter.api"
+
+info(
+	title : "go-zero-micro"
+	desc: "userapi"
+	author: "ximuqi"
+	email: "xxx"
+	version: "0.0.1"
+)
