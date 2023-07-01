@@ -4,3 +4,7 @@ Etcd:
   Hosts:
   - 127.0.0.1:2379
   Key: ucenter.rpc
+
+JWT:
+  AccessSecret: 1a3201qa-8b3d-ed0a-05eb-2e9c9b74f6b7
+  AccessExpire: 86400
