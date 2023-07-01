@@ -23,7 +23,7 @@ func NewAddUserLogic(ctx context.Context, svcCtx *svc.ServiceContext) *AddUserLo
 	}
 }
 
-// 添加用户
+// AddUser 添加用户
 func (l *AddUserLogic) AddUser(in *ucenter.User) (*ucenter.BaseResp, error) {
 	// todo: add your logic here and delete this line
 

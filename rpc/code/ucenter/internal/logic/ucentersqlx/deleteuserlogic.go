@@ -23,7 +23,7 @@ func NewDeleteUserLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Delete
 	}
 }
 
-// 注销用户信息
+// DeleteUser 注销用户信息
 func (l *DeleteUserLogic) DeleteUser(in *ucenter.BaseModel) (*ucenter.BaseResp, error) {
 	// todo: add your logic here and delete this line
 
