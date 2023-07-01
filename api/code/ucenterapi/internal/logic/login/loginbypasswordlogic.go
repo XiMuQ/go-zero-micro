@@ -30,7 +30,8 @@ func (l *LoginByPasswordLogic) LoginByPassword(req *types.UserLoginPasswordModel
 	// todo: add your logic here and delete this line
 	param := &ucenter.User{}
 	copier.Copy(param, req)
-	loginRes, err := l.svcCtx.UcenterSqlxRpc.LoginUser(l.ctx, param)
+	//loginRes, err := l.svcCtx.UcenterSqlxRpc.LoginUser(l.ctx, param)
+	loginRes, err := l.svcCtx.UcenterSqlxDC.LoginUser(l.ctx, param)
 	if err != nil {
 		return nil, errorx.NewDefaultError(errorx.UserLoginPasswordErrorCode)
 	}
