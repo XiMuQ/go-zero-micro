@@ -38,8 +38,8 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				},
 				{
 					Method:  http.MethodPost,
-					Path:    "/uploadAvatar",
-					Handler: ucenter.UploadAvatarHandler(serverCtx),
+					Path:    "/fileUpload",
+					Handler: ucenter.FileUploadHandler(serverCtx),
 				},
 			}...,
 		),

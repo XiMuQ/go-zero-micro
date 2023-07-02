@@ -42,8 +42,8 @@ service ucenter-api {
 	@doc(
 		summary: "5 上传头像"
 	)
-	@handler uploadAvatar
-	post /uploadAvatar (FileUploadReq) returns (BaseModel)
+	@handler fileUpload
+	post /fileUpload (FileUploadReq) returns (BaseModel)
 }
 
 @server(

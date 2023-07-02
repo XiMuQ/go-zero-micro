@@ -10,7 +10,7 @@ import (
 	"go-zero-micro/api/code/ucenterapi/internal/types"
 )
 
-func UploadAvatarHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
+func FileUploadHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var req types.FileUploadReq
 		if err := httpx.Parse(r, &req); err != nil {
@@ -18,14 +18,13 @@ func UploadAvatarHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 			return
 		}
 
-		l := ucenter.NewUploadAvatarLogic(r.Context(), svcCtx)
-		resp, err := l.UploadAvatar(&req)
+		l := ucenter.NewFileUploadLogic(r.Context(), svcCtx)
+		resp, err := l.FileUpload(r, &req)
 		//if err != nil {
 		//	httpx.ErrorCtx(r.Context(), w, err)
 		//} else {
 		//	httpx.OkJsonCtx(r.Context(), w, resp)
 		//}
-
 		response.Response(r.Context(), w, resp, err)
 	}
 }
