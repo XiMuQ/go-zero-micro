@@ -127,6 +127,41 @@ message UserLoginResp {
     int64 RefreshAfter = 8;
 }
 
+message FileInfo {
+    //文件-id
+    int64 FileId = 1;
+    //文件-名称
+    string FileName = 2;
+    //文件类型 1：图片 2：音频 3：视频 4：文件
+    string FileType = 3;
+    //文件大小
+    int64 FileSize = 4;
+    //文件流
+    bytes FileData = 5;
+}
+
+// 文件集合
+message FileList {
+    //父级-id
+    int64 PidId = 1;
+    //父级-id
+    int64 Type = 2;
+    //文件信息
+    repeated FileInfo file = 3;
+    // 创建者-id
+    int64 CreatedBy = 4;
+    // 创建时间
+    string CreatedAt = 5;
+    // 更新者-id
+    int64 UpdatedBy = 6;
+    // 更新时间
+    string UpdatedAt = 7;
+    // 删除者-id
+    int64 DeletedBy = 8;
+    // 删除时间
+    string DeletedAt = 9;
+}
+
 service ucenterSqlx {
     //获取用户信息
     rpc GetUser(BaseModel) returns(User);
@@ -136,6 +171,8 @@ service ucenterSqlx {
     rpc DeleteUser(BaseModel) returns(BaseResp);
     //用户登录
     rpc LoginUser(User) returns(UserLoginResp);
+    //文件上传
+    rpc FileUpload(FileList) returns(BaseResp);
 }
 
 service ucenterGorm {

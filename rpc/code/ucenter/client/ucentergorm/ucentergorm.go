@@ -18,6 +18,8 @@ type (
 	BaseModel     = ucenter.BaseModel
 	BaseModelList = ucenter.BaseModelList
 	BaseResp      = ucenter.BaseResp
+	FileInfo      = ucenter.FileInfo
+	FileList      = ucenter.FileList
 	User          = ucenter.User
 	UserLoginResp = ucenter.UserLoginResp
 

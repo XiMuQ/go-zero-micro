@@ -9,4 +9,11 @@ type Config struct {
 		AccessSecret string
 		AccessExpire int64
 	}
+	UploadFile UploadFile
+}
+
+type UploadFile struct {
+	MaxFileNum  int64
+	MaxFileSize int64
+	SavePath    string
 }
