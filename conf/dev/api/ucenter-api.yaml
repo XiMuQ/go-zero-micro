@@ -19,10 +19,12 @@ UploadFile:
 
 # UCenter 服务
 UCenterRpc:
-  Etcd:
-    Hosts:
-      - 127.0.0.1:2379
-    Key: ucenter.rpc
+#  Etcd:
+#    Hosts:
+#      - 127.0.0.1:2379
+#    Key: ucenter.rpc
+  Endpoints:
+    - 127.0.0.1:8080
   #api请求rpc服务的超时时间
   Timeout: 10000
 
