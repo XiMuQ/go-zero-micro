@@ -7,181 +7,181 @@ option go_package = "./ucenter";
 
 //0-1 公用类
 message BaseModel {
-    // id
-    int64 Id = 1;
-    // 名称
-    string Name = 2;
-    // 数据
-    string Data = 3;
-    // 创建者-id
-    int64 CreatedBy = 4;
-    // 创建时间
-    string CreatedAt = 5;
-    // 更新者-id
-    int64 UpdatedBy = 6;
-    // 更新时间
-    string UpdatedAt = 7;
-    // 删除者-id
-    int64 DeletedBy = 8;
-    // 删除时间
-    string DeletedAt = 9;
+  // id
+  int64 Id = 1;
+  // 名称
+  string Name = 2;
+  // 数据
+  string Data = 3;
+  // 创建者-id
+  int64 CreatedBy = 4;
+  // 创建时间
+  string CreatedAt = 5;
+  // 更新者-id
+  int64 UpdatedBy = 6;
+  // 更新时间
+  string UpdatedAt = 7;
+  // 删除者-id
+  int64 DeletedBy = 8;
+  // 删除时间
+  string DeletedAt = 9;
 }
 
 //0-2 Data集合
 message BaseIdList {
-    repeated int64 IdList = 1;
-    // 创建者-id
-    int64 CreatedBy = 2;
-    // 创建时间
-    string CreatedAt = 3;
-    // 更新者-id
-    int64 UpdatedBy = 4;
-    // 更新时间
-    string UpdatedAt = 5;
-    // 删除者-id
-    int64 DeletedBy = 6;
-    // 删除时间
-    string DeletedAt = 7;
+  repeated int64 IdList = 1;
+  // 创建者-id
+  int64 CreatedBy = 2;
+  // 创建时间
+  string CreatedAt = 3;
+  // 更新者-id
+  int64 UpdatedBy = 4;
+  // 更新时间
+  string UpdatedAt = 5;
+  // 删除者-id
+  int64 DeletedBy = 6;
+  // 删除时间
+  string DeletedAt = 7;
 }
 
 //0-3 Data集合
 message BaseDataList {
-    repeated string DataList = 1;
-    // 创建者-id
-    int64 CreatedBy = 2;
-    // 创建时间
-    string CreatedAt = 3;
-    // 更新者-id
-    int64 UpdatedBy = 4;
-    // 更新时间
-    string UpdatedAt = 5;
-    // 删除者-id
-    int64 DeletedBy = 6;
-    // 删除时间
-    string DeletedAt = 7;
+  repeated string DataList = 1;
+  // 创建者-id
+  int64 CreatedBy = 2;
+  // 创建时间
+  string CreatedAt = 3;
+  // 更新者-id
+  int64 UpdatedBy = 4;
+  // 更新时间
+  string UpdatedAt = 5;
+  // 删除者-id
+  int64 DeletedBy = 6;
+  // 删除时间
+  string DeletedAt = 7;
 }
 
 //0-4 公共返回
 message BaseModelList {
-    repeated BaseModel Data = 1;
+  repeated BaseModel Data = 1;
 }
 
 //0-5 公共返回
 message BaseResp {
-    // id
-    int64 Id = 1;
-    // 名称
-    string Message = 2;
-    // 数据
-    string Data = 3;
+  // id
+  int64 Id = 1;
+  // 名称
+  string Message = 2;
+  // 数据
+  string Data = 3;
 }
 
 // 用户数据
 message User {
-    // id
-    int64 Id = 1;
-    // 账号
-    string Account = 2;
-    // 用户名
-    string Username = 3;
-    // 性别 1：未设置；2：男性；3：女性
-    int64 Gender = 4;
-    // 密码
-    string Password = 5;
-    // 头像
-    string Avatar = 6;
-    // 邮箱
-    string Email = 7;
-    // 手机号
-    string Phone = 8;
-    // 创建者-id
-    int64 CreatedBy = 9;
-    // 创建时间
-    string CreatedAt = 10;
-    // 更新者-id
-    int64 UpdatedBy = 11;
-    // 更新时间
-    string UpdatedAt = 12;
-    // 删除者-id
-    int64 DeletedBy = 13;
-    // 删除时间
-    string DeletedAt = 14;
+  // id
+  int64 Id = 1;
+  // 账号
+  string Account = 2;
+  // 用户名
+  string Username = 3;
+  // 性别 1：未设置；2：男性；3：女性
+  int64 Gender = 4;
+  // 密码
+  string Password = 5;
+  // 头像
+  string Avatar = 6;
+  // 邮箱
+  string Email = 7;
+  // 手机号
+  string Phone = 8;
+  // 创建者-id
+  int64 CreatedBy = 9;
+  // 创建时间
+  string CreatedAt = 10;
+  // 更新者-id
+  int64 UpdatedBy = 11;
+  // 更新时间
+  string UpdatedAt = 12;
+  // 删除者-id
+  int64 DeletedBy = 13;
+  // 删除时间
+  string DeletedAt = 14;
 }
 
 message UserLoginResp {
-    // id
-    int64 id = 1;
-    // 账号
-    string Account = 2;
-    // 用户名
-    string Username = 3;
-    // 性别 1：未设置；2：男性；3：女性
-    int64 Gender = 4;
-    // 头像
-    string Avatar = 5;
-    //token
-    string AccessToken = 6;
-    //过期时间
-    int64 AccessExpire = 7;
+  // id
+  int64 id = 1;
+  // 账号
+  string Account = 2;
+  // 用户名
+  string Username = 3;
+  // 性别 1：未设置；2：男性；3：女性
+  int64 Gender = 4;
+  // 头像
+  string Avatar = 5;
+  //token
+  string AccessToken = 6;
+  //过期时间
+  int64 AccessExpire = 7;
 
-    int64 RefreshAfter = 8;
+  int64 RefreshAfter = 8;
 }
 
 message FileInfo {
-    //文件-id
-    int64 FileId = 1;
-    //文件-名称
-    string FileName = 2;
-    //文件类型 1：图片 2：音频 3：视频 4：文件
-    string FileType = 3;
-    //文件大小
-    int64 FileSize = 4;
-    //文件流
-    bytes FileData = 5;
+  //文件-id
+  int64 FileId = 1;
+  //文件-名称
+  string FileName = 2;
+  //文件类型 1：图片 2：音频 3：视频 4：文件
+  string FileType = 3;
+  //文件大小
+  int64 FileSize = 4;
+  //文件流
+  bytes FileData = 5;
 }
 
 // 文件集合
 message FileList {
-    //父级-id
-    int64 PidId = 1;
-    //父级-id
-    int64 Type = 2;
-    //文件信息
-    repeated FileInfo file = 3;
-    // 创建者-id
-    int64 CreatedBy = 4;
-    // 创建时间
-    string CreatedAt = 5;
-    // 更新者-id
-    int64 UpdatedBy = 6;
-    // 更新时间
-    string UpdatedAt = 7;
-    // 删除者-id
-    int64 DeletedBy = 8;
-    // 删除时间
-    string DeletedAt = 9;
+  //父级-id
+  int64 PidId = 1;
+  //父级-id
+  int64 Type = 2;
+  //文件信息
+  repeated FileInfo file = 3;
+  // 创建者-id
+  int64 CreatedBy = 4;
+  // 创建时间
+  string CreatedAt = 5;
+  // 更新者-id
+  int64 UpdatedBy = 6;
+  // 更新时间
+  string UpdatedAt = 7;
+  // 删除者-id
+  int64 DeletedBy = 8;
+  // 删除时间
+  string DeletedAt = 9;
 }
 
 service ucenterSqlx {
-    //获取用户信息
-    rpc GetUser(BaseModel) returns(User);
-    //添加用户
-    rpc AddUser(User) returns(BaseResp);
-    //注销用户信息
-    rpc DeleteUser(BaseModel) returns(BaseResp);
-    //用户登录
-    rpc LoginUser(User) returns(UserLoginResp);
-    //文件上传
-    rpc FileUpload(FileList) returns(BaseResp);
+  //获取用户信息
+  rpc GetUser(BaseModel) returns(User);
+  //添加用户
+  rpc AddUser(User) returns(BaseResp);
+  //注销用户信息
+  rpc DeleteUser(BaseModel) returns(BaseResp);
+  //用户登录
+  rpc LoginUser(User) returns(UserLoginResp);
+  //文件上传
+  rpc FileUpload(FileList) returns(BaseResp);
 }
 
 service ucenterGorm {
-    //获取用户信息
-    rpc GetUser(BaseModel) returns(User);
-    //添加用户
-    rpc AddUser(User) returns(BaseResp);
-    //注销用户信息
-    rpc DeleteUser(BaseModel) returns(BaseResp);
-    //用户登录
-    rpc LoginUser(User) returns(UserLoginResp);
+  //获取用户信息
+  rpc GetUser(BaseModel) returns(User);
+  //添加用户
+  rpc AddUser(User) returns(BaseResp);
+  //注销用户信息
+  rpc DeleteUser(BaseModel) returns(BaseResp);
+  //用户登录
+  rpc LoginUser(User) returns(UserLoginResp);
 }
