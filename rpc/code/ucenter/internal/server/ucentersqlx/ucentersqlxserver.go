@@ -45,9 +45,3 @@ func (s *UcenterSqlxServer) LoginUser(ctx context.Context, in *ucenter.User) (*u
 	l := ucentersqlxlogic.NewLoginUserLogic(ctx, s.svcCtx)
 	return l.LoginUser(in)
 }
-
-// 文件上传
-func (s *UcenterSqlxServer) FileUpload(ctx context.Context, in *ucenter.FileList) (*ucenter.BaseResp, error) {
-	l := ucentersqlxlogic.NewFileUploadLogic(ctx, s.svcCtx)
-	return l.FileUpload(in)
-}

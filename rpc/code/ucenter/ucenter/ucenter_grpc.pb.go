@@ -23,7 +23,6 @@ const (
 	UcenterSqlx_AddUser_FullMethodName    = "/ucenter.ucenterSqlx/AddUser"
 	UcenterSqlx_DeleteUser_FullMethodName = "/ucenter.ucenterSqlx/DeleteUser"
 	UcenterSqlx_LoginUser_FullMethodName  = "/ucenter.ucenterSqlx/LoginUser"
-	UcenterSqlx_FileUpload_FullMethodName = "/ucenter.ucenterSqlx/FileUpload"
 )
 
 // UcenterSqlxClient is the client API for UcenterSqlx service.
@@ -38,8 +37,6 @@ type UcenterSqlxClient interface {
 	DeleteUser(ctx context.Context, in *BaseModel, opts ...grpc.CallOption) (*BaseResp, error)
 	// 用户登录
 	LoginUser(ctx context.Context, in *User, opts ...grpc.CallOption) (*UserLoginResp, error)
-	// 文件上传
-	FileUpload(ctx context.Context, in *FileList, opts ...grpc.CallOption) (*BaseResp, error)
 }
 
 type ucenterSqlxClient struct {
@@ -86,15 +83,6 @@ func (c *ucenterSqlxClient) LoginUser(ctx context.Context, in *User, opts ...grp
 	return out, nil
 }
 
-func (c *ucenterSqlxClient) FileUpload(ctx context.Context, in *FileList, opts ...grpc.CallOption) (*BaseResp, error) {
-	out := new(BaseResp)
-	err := c.cc.Invoke(ctx, UcenterSqlx_FileUpload_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 // UcenterSqlxServer is the server API for UcenterSqlx service.
 // All implementations must embed UnimplementedUcenterSqlxServer
 // for forward compatibility
@@ -107,8 +95,6 @@ type UcenterSqlxServer interface {
 	DeleteUser(context.Context, *BaseModel) (*BaseResp, error)
 	// 用户登录
 	LoginUser(context.Context, *User) (*UserLoginResp, error)
-	// 文件上传
-	FileUpload(context.Context, *FileList) (*BaseResp, error)
 	mustEmbedUnimplementedUcenterSqlxServer()
 }
 
@@ -127,9 +113,6 @@ func (UnimplementedUcenterSqlxServer) DeleteUser(context.Context, *BaseModel) (*
 }
 func (UnimplementedUcenterSqlxServer) LoginUser(context.Context, *User) (*UserLoginResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method LoginUser not implemented")
-}
-func (UnimplementedUcenterSqlxServer) FileUpload(context.Context, *FileList) (*BaseResp, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method FileUpload not implemented")
 }
 func (UnimplementedUcenterSqlxServer) mustEmbedUnimplementedUcenterSqlxServer() {}
 
@@ -216,24 +199,6 @@ func _UcenterSqlx_LoginUser_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
-func _UcenterSqlx_FileUpload_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(FileList)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(UcenterSqlxServer).FileUpload(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: UcenterSqlx_FileUpload_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UcenterSqlxServer).FileUpload(ctx, req.(*FileList))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 // UcenterSqlx_ServiceDesc is the grpc.ServiceDesc for UcenterSqlx service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -256,10 +221,6 @@ var UcenterSqlx_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "LoginUser",
 			Handler:    _UcenterSqlx_LoginUser_Handler,
-		},
-		{
-			MethodName: "FileUpload",
-			Handler:    _UcenterSqlx_FileUpload_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
@@ -472,5 +433,164 @@ var UcenterGorm_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
+	Metadata: "proto/ucenter.proto",
+}
+
+const (
+	FileStorage_FileUpload_FullMethodName   = "/ucenter.fileStorage/FileUpload"
+	FileStorage_FileDownload_FullMethodName = "/ucenter.fileStorage/FileDownload"
+)
+
+// FileStorageClient is the client API for FileStorage service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+type FileStorageClient interface {
+	// 文件上传
+	FileUpload(ctx context.Context, in *FileList, opts ...grpc.CallOption) (*BaseResp, error)
+	// 文件下载
+	FileDownload(ctx context.Context, in *FileInfo, opts ...grpc.CallOption) (FileStorage_FileDownloadClient, error)
+}
+
+type fileStorageClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewFileStorageClient(cc grpc.ClientConnInterface) FileStorageClient {
+	return &fileStorageClient{cc}
+}
+
+func (c *fileStorageClient) FileUpload(ctx context.Context, in *FileList, opts ...grpc.CallOption) (*BaseResp, error) {
+	out := new(BaseResp)
+	err := c.cc.Invoke(ctx, FileStorage_FileUpload_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *fileStorageClient) FileDownload(ctx context.Context, in *FileInfo, opts ...grpc.CallOption) (FileStorage_FileDownloadClient, error) {
+	stream, err := c.cc.NewStream(ctx, &FileStorage_ServiceDesc.Streams[0], FileStorage_FileDownload_FullMethodName, opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &fileStorageFileDownloadClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type FileStorage_FileDownloadClient interface {
+	Recv() (*FileInfo, error)
+	grpc.ClientStream
+}
+
+type fileStorageFileDownloadClient struct {
+	grpc.ClientStream
+}
+
+func (x *fileStorageFileDownloadClient) Recv() (*FileInfo, error) {
+	m := new(FileInfo)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+// FileStorageServer is the server API for FileStorage service.
+// All implementations must embed UnimplementedFileStorageServer
+// for forward compatibility
+type FileStorageServer interface {
+	// 文件上传
+	FileUpload(context.Context, *FileList) (*BaseResp, error)
+	// 文件下载
+	FileDownload(*FileInfo, FileStorage_FileDownloadServer) error
+	mustEmbedUnimplementedFileStorageServer()
+}
+
+// UnimplementedFileStorageServer must be embedded to have forward compatible implementations.
+type UnimplementedFileStorageServer struct {
+}
+
+func (UnimplementedFileStorageServer) FileUpload(context.Context, *FileList) (*BaseResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method FileUpload not implemented")
+}
+func (UnimplementedFileStorageServer) FileDownload(*FileInfo, FileStorage_FileDownloadServer) error {
+	return status.Errorf(codes.Unimplemented, "method FileDownload not implemented")
+}
+func (UnimplementedFileStorageServer) mustEmbedUnimplementedFileStorageServer() {}
+
+// UnsafeFileStorageServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to FileStorageServer will
+// result in compilation errors.
+type UnsafeFileStorageServer interface {
+	mustEmbedUnimplementedFileStorageServer()
+}
+
+func RegisterFileStorageServer(s grpc.ServiceRegistrar, srv FileStorageServer) {
+	s.RegisterService(&FileStorage_ServiceDesc, srv)
+}
+
+func _FileStorage_FileUpload_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(FileList)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FileStorageServer).FileUpload(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: FileStorage_FileUpload_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FileStorageServer).FileUpload(ctx, req.(*FileList))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _FileStorage_FileDownload_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(FileInfo)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(FileStorageServer).FileDownload(m, &fileStorageFileDownloadServer{stream})
+}
+
+type FileStorage_FileDownloadServer interface {
+	Send(*FileInfo) error
+	grpc.ServerStream
+}
+
+type fileStorageFileDownloadServer struct {
+	grpc.ServerStream
+}
+
+func (x *fileStorageFileDownloadServer) Send(m *FileInfo) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+// FileStorage_ServiceDesc is the grpc.ServiceDesc for FileStorage service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var FileStorage_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "ucenter.fileStorage",
+	HandlerType: (*FileStorageServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "FileUpload",
+			Handler:    _FileStorage_FileUpload_Handler,
+		},
+	},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "FileDownload",
+			Handler:       _FileStorage_FileDownload_Handler,
+			ServerStreams: true,
+		},
+	},
 	Metadata: "proto/ucenter.proto",
 }

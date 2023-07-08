@@ -32,8 +32,6 @@ type (
 		DeleteUser(ctx context.Context, in *BaseModel, opts ...grpc.CallOption) (*BaseResp, error)
 		// 用户登录
 		LoginUser(ctx context.Context, in *User, opts ...grpc.CallOption) (*UserLoginResp, error)
-		// 文件上传
-		FileUpload(ctx context.Context, in *FileList, opts ...grpc.CallOption) (*BaseResp, error)
 	}
 
 	defaultUcenterSqlx struct {
@@ -69,10 +67,4 @@ func (m *defaultUcenterSqlx) DeleteUser(ctx context.Context, in *BaseModel, opts
 func (m *defaultUcenterSqlx) LoginUser(ctx context.Context, in *User, opts ...grpc.CallOption) (*UserLoginResp, error) {
 	client := ucenter.NewUcenterSqlxClient(m.cli.Conn())
 	return client.LoginUser(ctx, in, opts...)
-}
-
-// 文件上传
-func (m *defaultUcenterSqlx) FileUpload(ctx context.Context, in *FileList, opts ...grpc.CallOption) (*BaseResp, error) {
-	client := ucenter.NewUcenterSqlxClient(m.cli.Conn())
-	return client.FileUpload(ctx, in, opts...)
 }

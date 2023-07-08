@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	filestorageServer "go-zero-micro/rpc/code/ucenter/internal/server/filestorage"
 
 	"go-zero-micro/rpc/code/ucenter/internal/config"
 	ucentergormServer "go-zero-micro/rpc/code/ucenter/internal/server/ucentergorm"
@@ -29,6 +30,9 @@ func main() {
 	s := zrpc.MustNewServer(c.RpcServerConf, func(grpcServer *grpc.Server) {
 		ucenter.RegisterUcenterSqlxServer(grpcServer, ucentersqlxServer.NewUcenterSqlxServer(ctx))
 		ucenter.RegisterUcenterGormServer(grpcServer, ucentergormServer.NewUcenterGormServer(ctx))
+
+		//新增的分组接口必须要在这里注册，根据proto生成时可能未新增，否则会报 unknown service ucenter.fileStorage
+		ucenter.RegisterFileStorageServer(grpcServer, filestorageServer.NewFileStorageServer(ctx))
 
 		if c.Mode == service.DevMode || c.Mode == service.TestMode {
 			reflection.Register(grpcServer)
