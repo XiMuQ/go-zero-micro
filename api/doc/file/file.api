@@ -1,0 +1,47 @@
+syntax = "v1"
+
+info(
+	title : "go-zero-micro"
+	desc: "userapi"
+	author: "ximuqi"
+	email: "xxx"
+	version: "0.0.1"
+)
+
+type (
+	/* 1 上传文件 */
+	FileUploadReq {
+		Id       int64   `form:"id"`                // 父级-id
+		Type     int64   `form:"type,optional"`     // 类型 1：类型1；2：类型2
+		FileList []*byte `form:"fileList,optional"` // 文件列表
+	}
+
+	/* 2 下载/预览文件 */
+	FileShowReq {
+		Id      int64  `form:"id"`               // 文件-id
+		FileUrl string `form:"fileUrl,optional"` // 文件地址
+	}
+)
+@server(
+	group: fileStorage
+	prefix: /fileStorage
+)
+service ucenter-api {
+	@doc(
+		summary: "1 上传文件"
+	)
+	@handler fileUpload
+	post /fileUpload (FileUploadReq) returns (BaseModel)
+
+	@doc(
+		summary: "2 文件下载"
+	)
+	@handler fileDownload
+	get /fileDownload (FileShowReq)
+
+	@doc(
+		summary: "3 文件预览"
+	)
+	@handler filePreview
+	get /filePreview (FileShowReq)
+}

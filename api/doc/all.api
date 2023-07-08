@@ -2,6 +2,7 @@ import "/base/common.api"
 import "/database/usermodel.api"
 
 import "/api/ucenter.api"
+import "/file/file.api"
 
 info(
 	title : "go-zero-micro"

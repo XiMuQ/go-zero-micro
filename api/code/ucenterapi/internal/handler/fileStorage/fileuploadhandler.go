@@ -1,11 +1,11 @@
-package ucenter
+package fileStorage
 
 import (
 	"go-zero-micro/common/response"
 	"net/http"
 
 	"github.com/zeromicro/go-zero/rest/httpx"
-	"go-zero-micro/api/code/ucenterapi/internal/logic/ucenter"
+	"go-zero-micro/api/code/ucenterapi/internal/logic/fileStorage"
 	"go-zero-micro/api/code/ucenterapi/internal/svc"
 	"go-zero-micro/api/code/ucenterapi/internal/types"
 )
@@ -18,7 +18,7 @@ func FileUploadHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 			return
 		}
 
-		l := ucenter.NewFileUploadLogic(r.Context(), svcCtx)
+		l := fileStorage.NewFileUploadLogic(r.Context(), svcCtx)
 		resp, err := l.FileUpload(r, &req)
 		//if err != nil {
 		//	httpx.ErrorCtx(r.Context(), w, err)

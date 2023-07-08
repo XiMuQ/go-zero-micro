@@ -73,11 +73,4 @@ type (
 		AccessExpire int64  `json:"accessExpire"` // 过期时间戳
 		RefreshAfter int64  `json:"refreshAfter"` //
 	}
-
-	/* 上传文件 */
-	FileUploadReq {
-		Id       int64   `form:"id"`                // 父级-id
-		Type     int64   `form:"type,optional"`     // 类型 1：类型1；2：类型2
-		FileList []*byte `form:"fileList,optional"` // 文件列表
-	}
 )

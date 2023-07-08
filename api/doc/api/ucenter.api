@@ -38,12 +38,6 @@ service ucenter-api {
 	)
 	@handler QueryUserByPath
 	get /path/:id/:name (PathReq) returns (BaseModel)
-
-	@doc(
-		summary: "5 上传头像"
-	)
-	@handler fileUpload
-	post /fileUpload (FileUploadReq) returns (BaseModel)
 }
 
 @server(

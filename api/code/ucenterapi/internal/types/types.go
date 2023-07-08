@@ -88,3 +88,8 @@ type FileUploadReq struct {
 	Type     int64   `form:"type,optional"`     // 类型 1：类型1；2：类型2
 	FileList []*byte `form:"fileList,optional"` // 文件列表
 }
+
+type FileShowReq struct {
+	Id      int64  `form:"id"`               // 文件-id
+	FileUrl string `form:"fileUrl,optional"` // 文件地址
+}

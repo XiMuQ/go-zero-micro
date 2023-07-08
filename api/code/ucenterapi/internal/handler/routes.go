@@ -4,6 +4,7 @@ package handler
 import (
 	"net/http"
 
+	fileStorage "go-zero-micro/api/code/ucenterapi/internal/handler/fileStorage"
 	login "go-zero-micro/api/code/ucenterapi/internal/handler/login"
 	ucenter "go-zero-micro/api/code/ucenterapi/internal/handler/ucenter"
 	"go-zero-micro/api/code/ucenterapi/internal/svc"
@@ -36,11 +37,6 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 					Path:    "/path/:id/:name",
 					Handler: ucenter.QueryUserByPathHandler(serverCtx),
 				},
-				{
-					Method:  http.MethodPost,
-					Path:    "/fileUpload",
-					Handler: ucenter.FileUploadHandler(serverCtx),
-				},
 			}...,
 		),
 		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
@@ -67,5 +63,26 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			},
 		},
 		rest.WithPrefix("/login"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodPost,
+				Path:    "/fileUpload",
+				Handler: fileStorage.FileUploadHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/fileDownload",
+				Handler: fileStorage.FileDownloadHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/filePreview",
+				Handler: fileStorage.FilePreviewHandler(serverCtx),
+			},
+		},
+		rest.WithPrefix("/fileStorage"),
 	)
 }
