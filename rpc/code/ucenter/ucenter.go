@@ -38,6 +38,11 @@ func main() {
 			reflection.Register(grpcServer)
 		}
 	})
+
+	MaxFileSize := int(c.UploadFile.MaxFileSize)
+	//调整RPC服务端收到的消息体大小限制
+	s.AddOptions(grpc.MaxRecvMsgSize(MaxFileSize))
+
 	defer s.Stop()
 
 	fmt.Printf("Starting rpc server at %s...\n", c.ListenOn)
