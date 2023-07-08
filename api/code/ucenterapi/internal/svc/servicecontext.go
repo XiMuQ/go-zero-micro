@@ -8,6 +8,7 @@ import (
 	"go-zero-micro/rpc/code/ucenter/client/filestorage"
 	"go-zero-micro/rpc/code/ucenter/client/ucentergorm"
 	"go-zero-micro/rpc/code/ucenter/client/ucentersqlx"
+	"google.golang.org/grpc"
 )
 
 type ServiceContext struct {
@@ -19,7 +20,12 @@ type ServiceContext struct {
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
-	uCenterRpcClient := zrpc.MustNewClient(c.UCenterRpc)
+	MaxFileSize := int(c.UploadFile.MaxFileSize)
+	//调整RPC客户端收到的消息体大小限制
+	dialOption := grpc.WithDefaultCallOptions(grpc.MaxCallRecvMsgSize(MaxFileSize))
+	opt := zrpc.WithDialOption(dialOption)
+
+	uCenterRpcClient := zrpc.MustNewClient(c.UCenterRpc, opt)
 
 	return &ServiceContext{
 		Config:         c,
