@@ -30,6 +30,10 @@ func NewLoginUserLogic(ctx context.Context, svcCtx *svc.ServiceContext) *LoginUs
 func (l *LoginUserLogic) LoginUser(in *ucenter.User) (*ucenter.UserLoginResp, error) {
 	// todo: add your logic here and delete this line
 	//return &ucenter.UserLoginResp{}, nil
+
+	//模拟耗时 20秒钟
+	sleepTime := 20 * time.Second
+	time.Sleep(sleepTime)
 	return l.LoginSuccess(in)
 }
 
