@@ -14,3 +14,11 @@ UploadFile:
   MaxFileNum: 1000
   MaxFileSize: 1048576000  # 1000MB
   SavePath: projects/go-zero-micro/uploadFiles/
+
+#日志配置
+Log:
+  Mode: file
+  Path: log/go-zero-micro/ucenterpc
+  Level: error
+  Compress: true
+  KeepDays: 180

@@ -29,7 +29,7 @@ UCenterRpc:
 #日志配置
 Log:
   Mode: file
-  Path: log/go-zero-micro
+  Path: log/go-zero-micro/ucenterapi
   Level: error
   Compress: true
   KeepDays: 180
