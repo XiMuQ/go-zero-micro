@@ -7,9 +7,9 @@ Auth:
   AccessExpire: 86400
 
 #web请求到此api服务的超时时间
-Timeout: 10000
-# 将请求体最大允许字节数从1MB改为1000MB
-MaxBytes: 1048576000
+Timeout: 600000
+# 将请求体最大允许字节数从1MB改为10000MB
+MaxBytes: 10485760000
 
 #文件
 UploadFile:
@@ -24,7 +24,7 @@ UCenterRpc:
       - 127.0.0.1:2379
     Key: ucenter.rpc
   #api请求rpc服务的超时时间
-  Timeout: 5000
+  Timeout: 600000
 
 #日志配置
 Log:

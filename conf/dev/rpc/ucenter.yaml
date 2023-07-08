@@ -5,11 +5,11 @@ Etcd:
   - 127.0.0.1:2379
   Key: ucenter.rpc
 
-#rpc处理超时时间 10秒
-Timeout: 10000
+#rpc处理超时时间 10分钟
+Timeout: 600000
 
 #开启grpc调试模式
-Mode: dev
+#Mode: dev
 
 JWT:
   AccessSecret: 1a3201qa-8b3d-ed0a-05eb-2e9c9b74f6b7
