@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/jinzhu/copier"
 	uuid "github.com/satori/go.uuid"
+	"go-zero-micro/common/errorx"
 	"go-zero-micro/common/utils"
 	"go-zero-micro/rpc/code/ucenter/ucenter"
 	"io"
@@ -151,7 +152,7 @@ func FileToByte(l *FileUploadLogic, request *http.Request, requestBody *types.Fi
 	param.File = rpcFileList
 	uploadRes, err := l.svcCtx.FileStorageRpc.FileUpload(l.ctx, param)
 	if err != nil {
-		return nil, err
+		return nil, errorx.NewCodeError(1000, err.Error())
 	}
 	res.Data = uploadRes.Data
 	return res, nil
