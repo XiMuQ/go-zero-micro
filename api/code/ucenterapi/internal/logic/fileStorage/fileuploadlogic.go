@@ -93,7 +93,7 @@ func LocalFileToByte(l *FileUploadLogic, request *http.Request, requestBody *typ
 		rpcFileList = append(rpcFileList, fileInfo)
 	}
 	param.File = rpcFileList
-	uploadRes, err := l.svcCtx.UcenterSqlxRpc.FileUpload(l.ctx, param)
+	uploadRes, err := l.svcCtx.FileStorageRpc.FileUpload(l.ctx, param)
 	if err != nil {
 		return nil, err
 	}
@@ -149,7 +149,7 @@ func FileToByte(l *FileUploadLogic, request *http.Request, requestBody *types.Fi
 		rpcFileList = append(rpcFileList, fileInfo)
 	}
 	param.File = rpcFileList
-	uploadRes, err := l.svcCtx.UcenterSqlxRpc.FileUpload(l.ctx, param)
+	uploadRes, err := l.svcCtx.FileStorageRpc.FileUpload(l.ctx, param)
 	if err != nil {
 		return nil, err
 	}

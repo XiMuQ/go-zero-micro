@@ -17,7 +17,7 @@ func FilePreviewHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 			return
 		}
 
-		l := fileStorage.NewFilePreviewLogic(r.Context(), svcCtx)
+		l := fileStorage.NewFilePreviewLogic(r.Context(), svcCtx, w)
 		err := l.FilePreview(&req)
 		if err != nil {
 			httpx.ErrorCtx(r.Context(), w, err)
