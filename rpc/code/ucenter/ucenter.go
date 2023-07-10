@@ -1,9 +1,9 @@
 package main
 
 import (
-	"context"
 	"flag"
 	"fmt"
+	"go-zero-micro/common/interceptor"
 	filestorageServer "go-zero-micro/rpc/code/ucenter/internal/server/filestorage"
 
 	"go-zero-micro/rpc/code/ucenter/internal/config"
@@ -45,26 +45,9 @@ func main() {
 	s.AddOptions(grpc.MaxRecvMsgSize(MaxFileSize))
 
 	//拦截器
-	s.AddUnaryInterceptors(func(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (resp interface{}, err error) {
-		fmt.Printf("RpcServerInterceptor1 ====> Start \n")
-		fmt.Printf("req =====================> %+v \n", req)
-		fmt.Printf("info =====================> %+v \n", info)
-		resp, err = handler(ctx, req)
-		fmt.Printf("resp =====================> %+v \n", resp)
-		fmt.Printf("RpcServerInterceptor1 ====> End \n")
-		return resp, err
-	})
-
+	s.AddUnaryInterceptors(interceptor.RpcServerInterceptor1)
 	//拦截器
-	s.AddUnaryInterceptors(func(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (resp interface{}, err error) {
-		fmt.Printf("RpcServerInterceptor2 ====> Start \n")
-		fmt.Printf("req =====================> %+v \n", req)
-		fmt.Printf("info =====================> %+v \n", info)
-		resp, err = handler(ctx, req)
-		fmt.Printf("resp =====================> %+v \n", resp)
-		fmt.Printf("RpcServerInterceptor2 ====> End \n")
-		return resp, err
-	})
+	s.AddUnaryInterceptors(interceptor.RpcServerInterceptor2)
 
 	defer s.Stop()
 
