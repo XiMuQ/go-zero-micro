@@ -1,6 +1,8 @@
 package svc
 
 import (
+	"context"
+	"fmt"
 	"github.com/zeromicro/go-zero/rest"
 	"github.com/zeromicro/go-zero/zrpc"
 	"go-zero-micro/api/code/ucenterapi/internal/config"
@@ -25,7 +27,33 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	dialOption := grpc.WithDefaultCallOptions(grpc.MaxCallRecvMsgSize(MaxFileSize))
 	opt := zrpc.WithDialOption(dialOption)
 
-	uCenterRpcClient := zrpc.MustNewClient(c.UCenterRpc, opt)
+	//声明拦截器
+	interceptor1 := zrpc.WithUnaryClientInterceptor(func(ctx context.Context, method string, req, reply interface{}, cc *grpc.ClientConn, invoker grpc.UnaryInvoker, opts ...grpc.CallOption) error {
+		fmt.Printf("interceptor1 ====> Start \n")
+		fmt.Printf("req =====================> %+v \n", req)
+
+		err := invoker(ctx, method, req, reply, cc, opts...)
+		fmt.Printf("interceptor1 ====> End \n")
+		if err != nil {
+			return err
+		}
+		return nil
+	})
+
+	//声明拦截器
+	interceptor2 := zrpc.WithUnaryClientInterceptor(func(ctx context.Context, method string, req, reply interface{}, cc *grpc.ClientConn, invoker grpc.UnaryInvoker, opts ...grpc.CallOption) error {
+		fmt.Printf("interceptor2 ====> Start \n")
+		fmt.Printf("req =====================> %+v \n", req)
+
+		err := invoker(ctx, method, req, reply, cc, opts...)
+		fmt.Printf("interceptor2 ====> End \n")
+		if err != nil {
+			return err
+		}
+		return nil
+	})
+
+	uCenterRpcClient := zrpc.MustNewClient(c.UCenterRpc, opt, interceptor1, interceptor2)
 
 	return &ServiceContext{
 		Config:         c,
