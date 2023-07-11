@@ -2,6 +2,7 @@ package utils
 
 import (
 	"context"
+	"encoding/base64"
 	"encoding/json"
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -17,4 +18,19 @@ func GetUidFromCtx(ctx context.Context, key any) int64 {
 		}
 	}
 	return uid
+}
+
+// Base64Encode base64加密
+func Base64Encode(message string) string {
+	encodedMessage := base64.StdEncoding.EncodeToString([]byte(message))
+	return encodedMessage
+}
+
+// Base64Decode base64解密
+func Base64Decode(message string) (string, error) {
+	decodedMessage, err := base64.StdEncoding.DecodeString(message)
+	if err != nil {
+		return "", err
+	}
+	return string(decodedMessage), nil
 }
