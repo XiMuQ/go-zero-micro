@@ -9,6 +9,11 @@ type Config struct {
 		AccessSecret string
 		AccessExpire int64
 	}
+
+	MySQL struct {
+		DataSource string
+	}
+
 	UploadFile UploadFile
 }
 

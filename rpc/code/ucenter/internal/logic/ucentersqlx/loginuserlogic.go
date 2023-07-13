@@ -2,7 +2,10 @@ package ucentersqlxlogic
 
 import (
 	"context"
+	"errors"
+	"fmt"
 	"go-zero-micro/common/utils"
+	"go-zero-micro/rpc/database/sqlx/usermodel"
 	"time"
 
 	"go-zero-micro/rpc/code/ucenter/internal/svc"
@@ -28,13 +31,22 @@ func NewLoginUserLogic(ctx context.Context, svcCtx *svc.ServiceContext) *LoginUs
 
 // LoginUser 用户登录
 func (l *LoginUserLogic) LoginUser(in *ucenter.User) (*ucenter.UserLoginResp, error) {
-	// todo: add your logic here and delete this line
-	//return &ucenter.UserLoginResp{}, nil
-
-	////模拟耗时 20秒钟
-	//sleepTime := 20 * time.Second
-	//time.Sleep(sleepTime)
-	return l.LoginSuccess(in)
+	param := &usermodel.ZeroUsers{
+		Account: in.Account,
+	}
+	dbRes, err := l.svcCtx.UsersModel.FindOneByParam(param)
+	if err != nil {
+		logx.Error(err)
+		errInfo := fmt.Sprintf("LoginUser:FindOneByParam:db err:%v , in : %+v", err, in)
+		return nil, errors.New(errInfo)
+	}
+	if utils.ComparePassword(in.Password, dbRes.Password) {
+		copier.Copy(in, dbRes)
+		return l.LoginSuccess(in)
+	} else {
+		errInfo := fmt.Sprintf("LoginUser:user password error:in : %+v", in)
+		return nil, errors.New(errInfo)
+	}
 }
 
 func (l *LoginUserLogic) LoginSuccess(in *ucenter.User) (*ucenter.UserLoginResp, error) {
