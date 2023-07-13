@@ -58,8 +58,8 @@ func init() {
 	errorMsg = make(map[int]string)
 	errorMsg[UserIdErrorCode] = "用户不存在"
 	errorMsg[UserAddErrorCode] = "该手机号已注册"
-	errorMsg[UserLoginPasswordErrorCode] = "登陆失败，密码错误"
-	errorMsg[UserLoginPhoneErrorCode] = "登陆失败，验证码错误"
+	errorMsg[UserLoginPasswordErrorCode] = "账号密码错误"
+	errorMsg[UserLoginPhoneErrorCode] = "验证码错误"
 
 	errorMsg[ServerErrorCode] = "服务繁忙，请稍后重试"
 	errorMsg[ParamErrorCode] = "参数错误"
