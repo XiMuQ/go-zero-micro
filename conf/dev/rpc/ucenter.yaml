@@ -2,7 +2,7 @@ Name: ucenter.rpc
 ListenOn: 0.0.0.0:8080
 Etcd:
   Hosts:
-  - 127.0.0.1:2379
+    - 127.0.0.1:2379
   Key: ucenter.rpc
 
 #rpc处理超时时间 10分钟
@@ -23,12 +23,12 @@ MySQL:
 UploadFile:
   MaxFileNum: 1000
   MaxFileSize: 1048576000  # 1000MB
-  SavePath: projects/go-zero-micro/uploadFiles/
+  SavePath: projects/files/go-zero-micro/uploadFiles/
 
 #日志配置
 Log:
   Mode: file
-  Path: log/go-zero-micro/ucenterpc
+  Path: projects/logs/go-zero-micro/rpc-ucenter
   Level: error
   Compress: true
   KeepDays: 180

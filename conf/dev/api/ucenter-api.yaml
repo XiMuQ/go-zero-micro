@@ -15,7 +15,7 @@ MaxBytes: 10485760000
 UploadFile:
   MaxFileNum: 1000
   MaxFileSize: 1048576000  # 1000MB
-  SavePath: projects/go-zero-micro/uploadFiles/
+  SavePath: projects/files/go-zero-micro/uploadFiles/
 
 # UCenter 服务
 UCenterRpc:
@@ -29,7 +29,7 @@ UCenterRpc:
 #日志配置
 Log:
   Mode: file
-  Path: log/go-zero-micro/ucenterapi
+  Path: projects/logs/go-zero-micro/api-ucenter
   Level: error
   Compress: true
   KeepDays: 180
