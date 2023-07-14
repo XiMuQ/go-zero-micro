@@ -5,6 +5,7 @@ import (
 	"go-zero-micro/common/utils"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
+	"strconv"
 )
 
 // RpcClientInterceptor1 rpc的客户端拦截器
@@ -25,9 +26,10 @@ func RpcClientInterceptor2(ctx context.Context, method string, req, reply interf
 	//fmt.Printf("RpcClientInterceptor2 ====> Start \n")
 	//fmt.Printf("req =====================> %+v \n", req)
 
+	userId := utils.GetUidFromCtx(ctx, "userId")
 	mapData := map[string]string{}
-	mapData["userId"] = utils.Base64Encode("111")
-	mapData["userName"] = utils.Base64Encode("哈哈哈")
+	mapData["userId"] = utils.Base64Encode(strconv.FormatInt(userId, 10))
+	//mapData["userName"] = utils.Base64Encode("哈哈哈")
 	md := metadata.New(mapData)
 	ctx = metadata.NewOutgoingContext(ctx, md)
 
