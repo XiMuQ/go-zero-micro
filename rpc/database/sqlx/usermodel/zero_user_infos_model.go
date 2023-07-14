@@ -20,7 +20,7 @@ type (
 	ZeroUserInfosModel interface {
 		zeroUserInfosModel
 
-		Trans(ctx context.Context, fn func(context context.Context, session sqlx.Session) error) error
+		TransCtx(ctx context.Context, fn func(context context.Context, session sqlx.Session) error) error
 		Count(data *ZeroUserInfos, beginTime, endTime string) (int64, error)
 		FindPageListByParam(data *ZeroUserInfos, beginTime, endTime string, current, pageSize int64) ([]*ZeroUserInfos, error)
 		FindAllByParam(data *ZeroUserInfos) ([]*ZeroUserInfos, error)
@@ -35,7 +35,7 @@ type (
 	}
 )
 
-func (c customZeroUserInfosModel) Trans(ctx context.Context, fn func(context context.Context, session sqlx.Session) error) error {
+func (c customZeroUserInfosModel) TransCtx(ctx context.Context, fn func(context context.Context, session sqlx.Session) error) error {
 	return c.conn.TransactCtx(ctx, func(ctx context.Context, session sqlx.Session) error {
 		return fn(ctx, session)
 	})
