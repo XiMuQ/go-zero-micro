@@ -2,7 +2,6 @@ package interceptor
 
 import (
 	"context"
-	"fmt"
 	"go-zero-micro/common/utils"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
@@ -10,11 +9,11 @@ import (
 
 // RpcClientInterceptor1 rpc的客户端拦截器
 func RpcClientInterceptor1(ctx context.Context, method string, req, reply interface{}, cc *grpc.ClientConn, invoker grpc.UnaryInvoker, opts ...grpc.CallOption) error {
-	fmt.Printf("RpcClientInterceptor1 ====> Start \n")
-	fmt.Printf("req =====================> %+v \n", req)
+	//fmt.Printf("RpcClientInterceptor1 ====> Start \n")
+	//fmt.Printf("req =====================> %+v \n", req)
 
 	err := invoker(ctx, method, req, reply, cc, opts...)
-	fmt.Printf("RpcClientInterceptor1 ====> End \n")
+	//fmt.Printf("RpcClientInterceptor1 ====> End \n")
 	if err != nil {
 		return err
 	}
@@ -23,8 +22,8 @@ func RpcClientInterceptor1(ctx context.Context, method string, req, reply interf
 
 // RpcClientInterceptor2 rpc的客户端拦截器
 func RpcClientInterceptor2(ctx context.Context, method string, req, reply interface{}, cc *grpc.ClientConn, invoker grpc.UnaryInvoker, opts ...grpc.CallOption) error {
-	fmt.Printf("RpcClientInterceptor2 ====> Start \n")
-	fmt.Printf("req =====================> %+v \n", req)
+	//fmt.Printf("RpcClientInterceptor2 ====> Start \n")
+	//fmt.Printf("req =====================> %+v \n", req)
 
 	mapData := map[string]string{}
 	mapData["userId"] = utils.Base64Encode("111")
@@ -33,7 +32,7 @@ func RpcClientInterceptor2(ctx context.Context, method string, req, reply interf
 	ctx = metadata.NewOutgoingContext(ctx, md)
 
 	err := invoker(ctx, method, req, reply, cc, opts...)
-	fmt.Printf("RpcClientInterceptor2 ====> End \n")
+	//fmt.Printf("RpcClientInterceptor2 ====> End \n")
 	if err != nil {
 		return err
 	}
