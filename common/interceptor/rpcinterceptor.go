@@ -2,7 +2,6 @@ package interceptor
 
 import (
 	"context"
-	"fmt"
 	"go-zero-micro/common/utils"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
@@ -31,7 +30,8 @@ func RpcServerInterceptor2(ctx context.Context, req interface{}, info *grpc.Unar
 		if len(tmp) > 0 {
 			userId, _ := utils.Base64Decode(tmp[0])
 			uid, _ := strconv.ParseInt(userId, 10, 64)
-			fmt.Printf("userId：%d\n", uid)
+			//fmt.Printf("userId：%d\n", uid)
+			ctx = context.WithValue(ctx, "userId", uid)
 		}
 		//uname := md.Get("userName")
 		//if len(tmp) > 0 {
