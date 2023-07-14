@@ -52,6 +52,8 @@ const (
 	UserAddErrorCode           = 2002
 	UserLoginPasswordErrorCode = 2003
 	UserLoginPhoneErrorCode    = 2004
+
+	DbAddErrorCode = 3001
 )
 
 func init() {
@@ -60,6 +62,8 @@ func init() {
 	errorMsg[UserAddErrorCode] = "该手机号已注册"
 	errorMsg[UserLoginPasswordErrorCode] = "账号密码错误"
 	errorMsg[UserLoginPhoneErrorCode] = "验证码错误"
+
+	errorMsg[DbAddErrorCode] = "数据库添加数据失败"
 
 	errorMsg[ServerErrorCode] = "服务繁忙，请稍后重试"
 	errorMsg[ParamErrorCode] = "参数错误"
