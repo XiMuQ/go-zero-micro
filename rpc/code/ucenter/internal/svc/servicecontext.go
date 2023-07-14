@@ -7,15 +7,17 @@ import (
 )
 
 type ServiceContext struct {
-	Config     config.Config
-	UsersModel usermodel.ZeroUsersModel
+	Config         config.Config
+	UsersModel     usermodel.ZeroUsersModel
+	UserInfosModel usermodel.ZeroUserInfosModel
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
 	mysqlConn := sqlx.NewMysql(c.MySQL.DataSource)
 
 	return &ServiceContext{
-		Config:     c,
-		UsersModel: usermodel.NewZeroUsersModel(mysqlConn),
+		Config:         c,
+		UsersModel:     usermodel.NewZeroUsersModel(mysqlConn),
+		UserInfosModel: usermodel.NewZeroUserInfosModel(mysqlConn),
 	}
 }

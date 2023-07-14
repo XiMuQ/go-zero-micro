@@ -2,6 +2,11 @@ package ucentersqlxlogic
 
 import (
 	"context"
+	"github.com/jinzhu/copier"
+	"go-zero-micro/common/errorx"
+	"go-zero-micro/common/utils"
+	"go-zero-micro/rpc/database/sqlx/usermodel"
+	"time"
 
 	"go-zero-micro/rpc/code/ucenter/internal/svc"
 	"go-zero-micro/rpc/code/ucenter/ucenter"
@@ -25,7 +30,38 @@ func NewAddUserLogic(ctx context.Context, svcCtx *svc.ServiceContext) *AddUserLo
 
 // AddUser 添加用户
 func (l *AddUserLogic) AddUser(in *ucenter.User) (*ucenter.BaseResp, error) {
-	// todo: add your logic here and delete this line
+	userId := utils.GetUidFromCtxInt64(l.ctx, "userId")
+	currentTime := time.Now()
+	/**
+	  1、需求逻辑：User表保存账号信息，UserInfo表是子表，保存关联信息，比如：邮箱、手机号等
+	  2、代码逻辑：先插入User表，后插入UserInfo表数据，插入UserInfo表时需要获取User表插入的id
+	  3、无事务特性时：可能会出现主表有数据，但子表无数据的情况，导致数据不一致
+	*/
 
-	return &ucenter.BaseResp{}, nil
+	userParam := &usermodel.ZeroUsers{}
+	copier.Copy(userParam, in)
+	userParam.Password = utils.GeneratePassword(l.svcCtx.Config.DefaultConfig.DefaultPassword)
+	userParam.CreatedBy = userId
+	userParam.CreatedAt = currentTime
+	dbUserRes, err := l.svcCtx.UsersModel.Save(l.ctx, userParam)
+	if err != nil {
+		return nil, errorx.NewDefaultError(errorx.DbAddErrorCode)
+	}
+	uid, err := dbUserRes.LastInsertId()
+	if err != nil {
+		return nil, errorx.NewDefaultError(errorx.DbAddErrorCode)
+	}
+
+	userInfoParam := &usermodel.ZeroUserInfos{}
+	copier.Copy(userInfoParam, in)
+	userInfoParam.UserId = uid
+	userInfoParam.CreatedBy = userId
+	userInfoParam.CreatedAt = currentTime
+	_, err = l.svcCtx.UserInfosModel.Save(l.ctx, userInfoParam)
+	if err != nil {
+		return nil, errorx.NewDefaultError(errorx.DbAddErrorCode)
+	}
+	return &ucenter.BaseResp{
+		Id: uid,
+	}, nil
 }
