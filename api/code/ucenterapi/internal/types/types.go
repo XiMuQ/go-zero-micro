@@ -54,10 +54,11 @@ type UserModel struct {
 }
 
 type UserSimpleModel struct {
-	Id      int64  `form:"id,optional"`      // id
-	Account string `form:"account,optional"` // 账号
-	Email   string `form:"email,optional"`   // 邮箱
-	Phone   string `form:"phone,optional"`   // 手机号
+	Id       int64  `form:"id,optional"`       // id
+	Account  string `form:"account,optional"`  // 账号
+	Username string `form:"username,optional"` // 用户名
+	Email    string `form:"email,optional"`    // 邮箱
+	Phone    string `form:"phone,optional"`    // 手机号
 }
 
 type UserLoginPasswordModel struct {
