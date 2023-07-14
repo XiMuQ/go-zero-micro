@@ -3,6 +3,7 @@ package ucentersqlxlogic
 import (
 	"context"
 	"github.com/jinzhu/copier"
+	"github.com/zeromicro/go-zero/core/stores/sqlx"
 	"go-zero-micro/common/errorx"
 	"go-zero-micro/common/utils"
 	"go-zero-micro/rpc/database/sqlx/usermodel"
@@ -37,31 +38,40 @@ func (l *AddUserLogic) AddUser(in *ucenter.User) (*ucenter.BaseResp, error) {
 	  2、代码逻辑：先插入User表，后插入UserInfo表数据，插入UserInfo表时需要获取User表插入的id
 	  3、无事务特性时：可能会出现主表有数据，但子表无数据的情况，导致数据不一致
 	*/
+	var InsertUserId int64
 
-	userParam := &usermodel.ZeroUsers{}
-	copier.Copy(userParam, in)
-	userParam.Password = utils.GeneratePassword(l.svcCtx.Config.DefaultConfig.DefaultPassword)
-	userParam.CreatedBy = userId
-	userParam.CreatedAt = currentTime
-	dbUserRes, err := l.svcCtx.UsersModel.Save(l.ctx, userParam)
-	if err != nil {
-		return nil, errorx.NewDefaultError(errorx.DbAddErrorCode)
-	}
-	uid, err := dbUserRes.LastInsertId()
-	if err != nil {
+	//将对主子表的操作全部放到同一个事务中，每一步操作有错误就返回错误，没有错误最后就返回nil，事务遇到错误会回滚；
+	if err := l.svcCtx.UsersModel.TransCtx(l.ctx, func(context context.Context, session sqlx.Session) error {
+		userParam := &usermodel.ZeroUsers{}
+		copier.Copy(userParam, in)
+		userParam.Password = utils.GeneratePassword(l.svcCtx.Config.DefaultConfig.DefaultPassword)
+		userParam.CreatedBy = userId
+		userParam.CreatedAt = currentTime
+		dbUserRes, err := l.svcCtx.UsersModel.TransSaveCtx(l.ctx, session, userParam)
+		if err != nil {
+			return err
+		}
+		uid, err := dbUserRes.LastInsertId()
+		if err != nil {
+			return err
+		}
+
+		userInfoParam := &usermodel.ZeroUserInfos{}
+		copier.Copy(userInfoParam, in)
+		userInfoParam.UserId = uid
+		userInfoParam.CreatedBy = userId
+		userInfoParam.CreatedAt = currentTime
+		_, err = l.svcCtx.UserInfosModel.TransSaveCtx(l.ctx, session, userInfoParam)
+		if err != nil {
+			return err
+		}
+		InsertUserId = uid
+		return nil
+	}); err != nil {
 		return nil, errorx.NewDefaultError(errorx.DbAddErrorCode)
 	}
 
-	userInfoParam := &usermodel.ZeroUserInfos{}
-	copier.Copy(userInfoParam, in)
-	userInfoParam.UserId = uid
-	userInfoParam.CreatedBy = userId
-	userInfoParam.CreatedAt = currentTime
-	_, err = l.svcCtx.UserInfosModel.Save(l.ctx, userInfoParam)
-	if err != nil {
-		return nil, errorx.NewDefaultError(errorx.DbAddErrorCode)
-	}
 	return &ucenter.BaseResp{
-		Id: uid,
+		Id: InsertUserId,
 	}, nil
 }

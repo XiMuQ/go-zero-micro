@@ -28,6 +28,8 @@ type (
 		Save(ctx context.Context, data *ZeroUserInfos) (sql.Result, error)
 		Edit(ctx context.Context, data *ZeroUserInfos) (sql.Result, error)
 		DeleteData(ctx context.Context, data *ZeroUserInfos) error
+
+		TransSaveCtx(ctx context.Context, session sqlx.Session, data *ZeroUserInfos) (sql.Result, error)
 	}
 
 	customZeroUserInfosModel struct {
@@ -228,6 +230,42 @@ func (c customZeroUserInfosModel) DeleteData(ctx context.Context, data *ZeroUser
 	sql := fmt.Sprintf("UPDATE %s SET deleted_flag = %d,deleted_at= %s WHERE id = %d", c.table, utils.DelYes, "'"+UpdateTime+"'", data.Id)
 	_, err := c.conn.ExecCtx(ctx, sql)
 	return err
+}
+
+func (c customZeroUserInfosModel) TransSaveCtx(ctx context.Context, session sqlx.Session, data *ZeroUserInfos) (sql.Result, error) {
+	typ := reflect.TypeOf(data).Elem()  //指针类型需要加 Elem()
+	val := reflect.ValueOf(data).Elem() //指针类型需要加 Elem()
+	fieldNum := val.NumField()
+
+	names := ""
+	values := ""
+	for i := 1; i < fieldNum; i++ {
+		Field := val.Field(i)
+		colType := Field.Type().String()
+		if colType == "int64" {
+			if Field.Int() > 0 {
+				names += fmt.Sprintf("`%s`,", typ.Field(i).Tag.Get("db"))
+				values += fmt.Sprintf("%d,", Field.Int())
+			}
+		} else if colType == "string" {
+			names += fmt.Sprintf("`%s`,", typ.Field(i).Tag.Get("db"))
+			values += fmt.Sprintf("'%s',", Field.String())
+		} else if colType == "time.Time" {
+			value := Field.Interface().(time.Time)
+			if !value.IsZero() {
+				names += fmt.Sprintf("`%s`,", typ.Field(i).Tag.Get("db"))
+				values += fmt.Sprintf("'%s',", value.Format(utils.DateTimeFormat))
+			}
+		}
+	}
+	names = strings.TrimRight(names, ",")
+	values = strings.TrimRight(values, ",")
+	saveSql := fmt.Sprintf("INSERT INTO %s(%s) VALUE(%s)", c.table, names, values)
+
+	//result, err := c.conn.ExecCtx(ctx, saveSql)
+	//return result, err
+	result, err := session.ExecCtx(ctx, saveSql)
+	return result, err
 }
 
 // NewZeroUserInfosModel returns a model for the database table.
