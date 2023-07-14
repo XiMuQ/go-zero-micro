@@ -19,6 +19,11 @@ MySQL:
   #本地数据库
   DataSource: root:root@tcp(127.0.0.1:3357)/go-zero-micro?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai
 
+#默认配置
+DefaultConfig:
+  #默认密码
+  DefaultPassword: "123456"
+
 #文件
 UploadFile:
   MaxFileNum: 1000
