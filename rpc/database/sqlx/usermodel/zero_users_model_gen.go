@@ -36,17 +36,17 @@ type (
 	}
 
 	ZeroUsers struct {
-		Id          int64     `db:"id"`           // id
-		Account     string    `db:"account"`      // 账号
-		Username    string    `db:"username"`     // 用户名
-		Password    string    `db:"password"`     // 密码
-		Gender      int64     `db:"gender"`       // 性别 1：未设置；2：男性；3：女性
-		UpdatedBy   int64     `db:"updated_by"`   // 更新人
-		UpdatedAt   time.Time `db:"updated_at"`   // 更新时间
-		CreatedBy   int64     `db:"created_by"`   // 创建人
-		CreatedAt   time.Time `db:"created_at"`   // 创建时间
-		DeletedAt   time.Time `db:"deleted_at"`   // 删除时间
-		DeletedFlag int64     `db:"deleted_flag"` // 是否删除 1：正常  2：已删除
+		Id          int64        `db:"id"`           // id
+		Account     string       `db:"account"`      // 账号
+		Username    string       `db:"username"`     // 用户名
+		Password    string       `db:"password"`     // 密码
+		Gender      int64        `db:"gender"`       // 性别 1：未设置；2：男性；3：女性
+		UpdatedBy   int64        `db:"updated_by"`   // 更新人
+		UpdatedAt   time.Time    `db:"updated_at"`   // 更新时间
+		CreatedBy   int64        `db:"created_by"`   // 创建人
+		CreatedAt   time.Time    `db:"created_at"`   // 创建时间
+		DeletedAt   sql.NullTime `db:"deleted_at"`   // 删除时间
+		DeletedFlag int64        `db:"deleted_flag"` // 是否删除 1：正常  2：已删除
 	}
 )
 
