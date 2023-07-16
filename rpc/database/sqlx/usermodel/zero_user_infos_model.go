@@ -7,9 +7,6 @@ import (
 	"github.com/zeromicro/go-zero/core/stores/sqlc"
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
 	"go-zero-micro/common/utils"
-	"reflect"
-	"strings"
-	"time"
 )
 
 var _ ZeroUserInfosModel = (*customZeroUserInfosModel)(nil)
@@ -43,42 +40,9 @@ func (c customZeroUserInfosModel) TransCtx(ctx context.Context, fn func(context 
 	})
 }
 
-/*
-*
-根据条件拼接的sql
-*/
-func userInfoSqlJoins(queryModel *ZeroUserInfos) string {
-	typ := reflect.TypeOf(queryModel).Elem()  //指针类型需要加 Elem()
-	val := reflect.ValueOf(queryModel).Elem() //指针类型需要加 Elem()
-	fieldNum := val.NumField()
-
-	sql := ""
-	for i := 0; i < fieldNum; i++ {
-		Field := val.Field(i)
-		colType := Field.Type().String()
-		colName := typ.Field(i).Tag.Get("db")
-
-		if colType == "int64" {
-			if Field.Int() > 0 {
-				sql += fmt.Sprintf(" AND %s=%d", colName, Field.Int())
-			}
-		} else if colType == "string" {
-			if Field.String() != "" {
-				sql += fmt.Sprintf(" AND %s LIKE %s", colName, "'%"+Field.String()+"%'")
-			}
-		} else if colType == "time.Time" {
-			value := Field.Interface().(time.Time)
-			if !value.IsZero() {
-				sql += fmt.Sprintf(" AND %s='%s'", colName, Field.String())
-			}
-		}
-	}
-	return sql
-}
-
 func (c customZeroUserInfosModel) Count(data *ZeroUserInfos, beginTime, endTime string) (int64, error) {
 	sql := fmt.Sprintf("SELECT count(*) as count FROM %s WHERE deleted_flag = %d", c.table, utils.DelNo)
-	joinSql := userInfoSqlJoins(data)
+	joinSql := utils.QuerySqlJoins(data)
 	beginTimeSql := ""
 	if beginTime != "" {
 		beginTimeSql = fmt.Sprintf(" AND created_at >= %s", "'"+beginTime+"'")
@@ -103,7 +67,7 @@ func (c customZeroUserInfosModel) Count(data *ZeroUserInfos, beginTime, endTime 
 
 func (c customZeroUserInfosModel) FindPageListByParam(data *ZeroUserInfos, beginTime, endTime string, current, pageSize int64) ([]*ZeroUserInfos, error) {
 	sql := fmt.Sprintf("SELECT %s FROM %s WHERE deleted_flag = %d", zeroUsersRows, c.table, utils.DelNo)
-	joinSql := userInfoSqlJoins(data)
+	joinSql := utils.QuerySqlJoins(data)
 	beginTimeSql := ""
 	if beginTime != "" {
 		beginTimeSql = fmt.Sprintf(" AND created_at >= %s", "'"+beginTime+"'")
@@ -130,7 +94,7 @@ func (c customZeroUserInfosModel) FindPageListByParam(data *ZeroUserInfos, begin
 
 func (c customZeroUserInfosModel) FindAllByParam(data *ZeroUserInfos) ([]*ZeroUserInfos, error) {
 	sql := fmt.Sprintf("SELECT %s FROM %s WHERE deleted_flag = %d", zeroUsersRows, c.table, utils.DelNo)
-	joinSql := userInfoSqlJoins(data)
+	joinSql := utils.QuerySqlJoins(data)
 	orderSql := " ORDER BY created_at DESC"
 	sql = sql + joinSql + orderSql
 
@@ -148,7 +112,7 @@ func (c customZeroUserInfosModel) FindAllByParam(data *ZeroUserInfos) ([]*ZeroUs
 
 func (c customZeroUserInfosModel) FindOneByParam(data *ZeroUserInfos) (*ZeroUserInfos, error) {
 	sql := fmt.Sprintf("SELECT %s FROM %s WHERE deleted_flag = %d", zeroUsersRows, c.table, utils.DelNo)
-	joinSql := userInfoSqlJoins(data)
+	joinSql := utils.QuerySqlJoins(data)
 	orderSql := " ORDER BY created_at DESC"
 	sql = sql + joinSql + orderSql
 
@@ -165,63 +129,14 @@ func (c customZeroUserInfosModel) FindOneByParam(data *ZeroUserInfos) (*ZeroUser
 }
 
 func (c customZeroUserInfosModel) Save(ctx context.Context, data *ZeroUserInfos) (sql.Result, error) {
-	typ := reflect.TypeOf(data).Elem()  //指针类型需要加 Elem()
-	val := reflect.ValueOf(data).Elem() //指针类型需要加 Elem()
-	fieldNum := val.NumField()
-
-	names := ""
-	values := ""
-	for i := 1; i < fieldNum; i++ {
-		Field := val.Field(i)
-		colType := Field.Type().String()
-		if colType == "int64" {
-			if Field.Int() > 0 {
-				names += fmt.Sprintf("`%s`,", typ.Field(i).Tag.Get("db"))
-				values += fmt.Sprintf("%d,", Field.Int())
-			}
-		} else if colType == "string" {
-			names += fmt.Sprintf("`%s`,", typ.Field(i).Tag.Get("db"))
-			values += fmt.Sprintf("'%s',", Field.String())
-		} else if colType == "time.Time" {
-			value := Field.Interface().(time.Time)
-			if !value.IsZero() {
-				names += fmt.Sprintf("`%s`,", typ.Field(i).Tag.Get("db"))
-				values += fmt.Sprintf("'%s',", value.Format(utils.DateTimeFormat))
-			}
-		}
-	}
-	names = strings.TrimRight(names, ",")
-	values = strings.TrimRight(values, ",")
-	saveSql := fmt.Sprintf("INSERT INTO %s(%s) VALUE(%s)", c.table, names, values)
+	saveSql := utils.SaveSqlJoins(data, c.table)
 	result, err := c.conn.ExecCtx(ctx, saveSql)
 	return result, err
 }
 
 func (c customZeroUserInfosModel) Edit(ctx context.Context, data *ZeroUserInfos) (sql.Result, error) {
-	typ := reflect.TypeOf(data).Elem()  //指针类型需要加 Elem()
-	val := reflect.ValueOf(data).Elem() //指针类型需要加 Elem()
-	fieldNum := val.NumField()
-
-	names := ""
-	for i := 1; i < fieldNum; i++ {
-		Field := val.Field(i)
-		colType := Field.Type().String()
-		if colType == "int64" {
-			if Field.Int() > 0 {
-				names += fmt.Sprintf("`%s`=%d,", typ.Field(i).Tag.Get("db"), Field.Int())
-			}
-		} else if colType == "string" {
-			names += fmt.Sprintf("`%s`='%s',", typ.Field(i).Tag.Get("db"), Field.String())
-		} else if colType == "time.Time" {
-			value := Field.Interface().(time.Time)
-			if !value.IsZero() {
-				names += fmt.Sprintf("`%s`='%s',", typ.Field(i).Tag.Get("db"), value.Format(utils.DateTimeFormat))
-			}
-		}
-	}
-	names = strings.TrimRight(names, ",")
-	sql := fmt.Sprintf("UPDATE %s SET deleted_flag = %d, %s WHERE id = %d", c.table, utils.DelNo, names, data.Id)
-	result, err := c.conn.ExecCtx(ctx, sql)
+	editSql := utils.EditSqlJoins(data, c.table, data.Id)
+	result, err := c.conn.ExecCtx(ctx, editSql)
 	return result, err
 }
 
@@ -233,35 +148,7 @@ func (c customZeroUserInfosModel) DeleteData(ctx context.Context, data *ZeroUser
 }
 
 func (c customZeroUserInfosModel) TransSaveCtx(ctx context.Context, session sqlx.Session, data *ZeroUserInfos) (sql.Result, error) {
-	typ := reflect.TypeOf(data).Elem()  //指针类型需要加 Elem()
-	val := reflect.ValueOf(data).Elem() //指针类型需要加 Elem()
-	fieldNum := val.NumField()
-
-	names := ""
-	values := ""
-	for i := 1; i < fieldNum; i++ {
-		Field := val.Field(i)
-		colType := Field.Type().String()
-		if colType == "int64" {
-			if Field.Int() > 0 {
-				names += fmt.Sprintf("`%s`,", typ.Field(i).Tag.Get("db"))
-				values += fmt.Sprintf("%d,", Field.Int())
-			}
-		} else if colType == "string" {
-			names += fmt.Sprintf("`%s`,", typ.Field(i).Tag.Get("db"))
-			values += fmt.Sprintf("'%s',", Field.String())
-		} else if colType == "time.Time" {
-			value := Field.Interface().(time.Time)
-			if !value.IsZero() {
-				names += fmt.Sprintf("`%s`,", typ.Field(i).Tag.Get("db"))
-				values += fmt.Sprintf("'%s',", value.Format(utils.DateTimeFormat))
-			}
-		}
-	}
-	names = strings.TrimRight(names, ",")
-	values = strings.TrimRight(values, ",")
-	saveSql := fmt.Sprintf("INSERT INTO %s(%s) VALUE(%s)", c.table, names, values)
-
+	saveSql := utils.SaveSqlJoins(data, c.table)
 	//result, err := c.conn.ExecCtx(ctx, saveSql)
 	//return result, err
 	result, err := session.ExecCtx(ctx, saveSql)
