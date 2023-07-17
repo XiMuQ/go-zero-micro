@@ -5,7 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"go-zero-micro/common/utils"
-	sqlx_usermodel "go-zero-micro/rpc/database/sqlx/usermodel"
+	sqlc_usermodel "go-zero-micro/rpc/database/sqlc/usermodel"
 	"time"
 
 	"go-zero-micro/rpc/code/ucenter/internal/svc"
@@ -31,10 +31,11 @@ func NewLoginUserLogic(ctx context.Context, svcCtx *svc.ServiceContext) *LoginUs
 
 // LoginUser 用户登录
 func (l *LoginUserLogic) LoginUser(in *ucenter.User) (*ucenter.UserLoginResp, error) {
-	param := &sqlx_usermodel.ZeroUsers{
+	param := &sqlc_usermodel.ZeroUsers{
+		Id:      1, //测试缓存
 		Account: in.Account,
 	}
-	dbRes, err := l.svcCtx.SqlxUsersModel.FindOneByParamCtx(l.ctx, param)
+	dbRes, err := l.svcCtx.SqlcUsersModel.FindOneByParamCtx(l.ctx, param)
 	if err != nil {
 		logx.Error(err)
 		errInfo := fmt.Sprintf("LoginUser:FindOneByParam:db err:%v , in : %+v", err, in)
