@@ -41,7 +41,7 @@ func (c customZeroUserInfosModel) TransCtx(ctx context.Context, fn func(context 
 }
 
 func (c customZeroUserInfosModel) CountCtx(ctx context.Context, data *ZeroUserInfos, beginTime, endTime string) (int64, error) {
-	sql := fmt.Sprintf("SELECT count(*) as count FROM %s WHERE deleted_flag = %d", c.table, utils.DelNo)
+	querySql := fmt.Sprintf("SELECT count(*) as count FROM %s WHERE deleted_flag = %d", c.table, utils.DelNo)
 	joinSql := utils.QuerySqlJoins(data)
 	beginTimeSql := ""
 	if beginTime != "" {
@@ -51,10 +51,10 @@ func (c customZeroUserInfosModel) CountCtx(ctx context.Context, data *ZeroUserIn
 	if endTime != "" {
 		endTimeSql = fmt.Sprintf(" AND created_at <= %s", "'"+endTime+"'")
 	}
-	sql = sql + joinSql + beginTimeSql + endTimeSql
+	querySql = querySql + joinSql + beginTimeSql + endTimeSql
 
 	var count int64
-	err := c.conn.QueryRowCtx(ctx, &count, sql)
+	err := c.conn.QueryRowCtx(ctx, &count, querySql)
 	switch err {
 	case nil:
 		return count, nil
@@ -66,7 +66,7 @@ func (c customZeroUserInfosModel) CountCtx(ctx context.Context, data *ZeroUserIn
 }
 
 func (c customZeroUserInfosModel) FindPageListByParamCtx(ctx context.Context, data *ZeroUserInfos, beginTime, endTime string, current, pageSize int64) ([]*ZeroUserInfos, error) {
-	sql := fmt.Sprintf("SELECT %s FROM %s WHERE deleted_flag = %d", zeroUsersRows, c.table, utils.DelNo)
+	querySql := fmt.Sprintf("SELECT %s FROM %s WHERE deleted_flag = %d", zeroUsersRows, c.table, utils.DelNo)
 	joinSql := utils.QuerySqlJoins(data)
 	beginTimeSql := ""
 	if beginTime != "" {
@@ -78,10 +78,10 @@ func (c customZeroUserInfosModel) FindPageListByParamCtx(ctx context.Context, da
 	}
 	orderSql := " ORDER BY created_at DESC"
 	limitSql := fmt.Sprintf(" LIMIT %d,%d", (current-1)*pageSize, pageSize)
-	sql = sql + joinSql + beginTimeSql + endTimeSql + orderSql + limitSql
+	querySql = querySql + joinSql + beginTimeSql + endTimeSql + orderSql + limitSql
 
 	var result []*ZeroUserInfos
-	err := c.conn.QueryRowsCtx(ctx, &result, sql)
+	err := c.conn.QueryRowsCtx(ctx, &result, querySql)
 	switch err {
 	case nil:
 		return result, nil
@@ -93,13 +93,13 @@ func (c customZeroUserInfosModel) FindPageListByParamCtx(ctx context.Context, da
 }
 
 func (c customZeroUserInfosModel) FindAllByParamCtx(ctx context.Context, data *ZeroUserInfos) ([]*ZeroUserInfos, error) {
-	sql := fmt.Sprintf("SELECT %s FROM %s WHERE deleted_flag = %d", zeroUsersRows, c.table, utils.DelNo)
+	querySql := fmt.Sprintf("SELECT %s FROM %s WHERE deleted_flag = %d", zeroUsersRows, c.table, utils.DelNo)
 	joinSql := utils.QuerySqlJoins(data)
 	orderSql := " ORDER BY created_at DESC"
-	sql = sql + joinSql + orderSql
+	querySql = querySql + joinSql + orderSql
 
 	var result []*ZeroUserInfos
-	err := c.conn.QueryRowsCtx(ctx, &result, sql)
+	err := c.conn.QueryRowsCtx(ctx, &result, querySql)
 	switch err {
 	case nil:
 		return result, nil
@@ -111,13 +111,13 @@ func (c customZeroUserInfosModel) FindAllByParamCtx(ctx context.Context, data *Z
 }
 
 func (c customZeroUserInfosModel) FindOneByParamCtx(ctx context.Context, data *ZeroUserInfos) (*ZeroUserInfos, error) {
-	sql := fmt.Sprintf("SELECT %s FROM %s WHERE deleted_flag = %d", zeroUsersRows, c.table, utils.DelNo)
+	querySql := fmt.Sprintf("SELECT %s FROM %s WHERE deleted_flag = %d", zeroUsersRows, c.table, utils.DelNo)
 	joinSql := utils.QuerySqlJoins(data)
 	orderSql := " ORDER BY created_at DESC"
-	sql = sql + joinSql + orderSql
+	querySql = querySql + joinSql + orderSql
 
 	var result ZeroUserInfos
-	err := c.conn.QueryRowCtx(ctx, &result, sql)
+	err := c.conn.QueryRowCtx(ctx, &result, querySql)
 	switch err {
 	case nil:
 		return &result, nil
@@ -142,8 +142,8 @@ func (c customZeroUserInfosModel) EditCtx(ctx context.Context, data *ZeroUserInf
 
 func (c customZeroUserInfosModel) DeleteDataCtx(ctx context.Context, data *ZeroUserInfos) error {
 	UpdateTime := data.UpdatedAt.Format(utils.DateTimeFormat)
-	sql := fmt.Sprintf("UPDATE %s SET deleted_flag = %d,deleted_at= %s WHERE id = %d", c.table, utils.DelYes, "'"+UpdateTime+"'", data.Id)
-	_, err := c.conn.ExecCtx(ctx, sql)
+	deleteSql := fmt.Sprintf("UPDATE %s SET deleted_flag = %d,deleted_at= %s WHERE id = %d", c.table, utils.DelYes, "'"+UpdateTime+"'", data.Id)
+	_, err := c.conn.ExecCtx(ctx, deleteSql)
 	return err
 }
 
