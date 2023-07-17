@@ -3,21 +3,21 @@ package svc
 import (
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
 	"go-zero-micro/rpc/code/ucenter/internal/config"
-	"go-zero-micro/rpc/database/sqlx/usermodel"
+	sqlx_usermodel "go-zero-micro/rpc/database/sqlx/usermodel"
 )
 
 type ServiceContext struct {
-	Config         config.Config
-	UsersModel     usermodel.ZeroUsersModel
-	UserInfosModel usermodel.ZeroUserInfosModel
+	Config             config.Config
+	SqlxUsersModel     sqlx_usermodel.ZeroUsersModel
+	SqlxUserInfosModel sqlx_usermodel.ZeroUserInfosModel
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
 	mysqlConn := sqlx.NewMysql(c.MySQL.DataSource)
 
 	return &ServiceContext{
-		Config:         c,
-		UsersModel:     usermodel.NewZeroUsersModel(mysqlConn),
-		UserInfosModel: usermodel.NewZeroUserInfosModel(mysqlConn),
+		Config:             c,
+		SqlxUsersModel:     sqlx_usermodel.NewZeroUsersModel(mysqlConn),
+		SqlxUserInfosModel: sqlx_usermodel.NewZeroUserInfosModel(mysqlConn),
 	}
 }

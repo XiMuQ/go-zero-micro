@@ -34,7 +34,7 @@ func (l *LoginUserLogic) LoginUser(in *ucenter.User) (*ucenter.UserLoginResp, er
 	param := &usermodel.ZeroUsers{
 		Account: in.Account,
 	}
-	dbRes, err := l.svcCtx.UsersModel.FindOneByParamCtx(l.ctx, param)
+	dbRes, err := l.svcCtx.SqlxUsersModel.FindOneByParamCtx(l.ctx, param)
 	if err != nil {
 		logx.Error(err)
 		errInfo := fmt.Sprintf("LoginUser:FindOneByParam:db err:%v , in : %+v", err, in)
