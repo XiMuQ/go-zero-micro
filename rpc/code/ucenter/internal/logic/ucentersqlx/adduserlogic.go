@@ -6,7 +6,7 @@ import (
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
 	"go-zero-micro/common/errorx"
 	"go-zero-micro/common/utils"
-	"go-zero-micro/rpc/database/sqlx/usermodel"
+	sqlx_usermodel "go-zero-micro/rpc/database/sqlx/usermodel"
 	"time"
 
 	"go-zero-micro/rpc/code/ucenter/internal/svc"
@@ -42,7 +42,7 @@ func (l *AddUserLogic) AddUser(in *ucenter.User) (*ucenter.BaseResp, error) {
 
 	//将对主子表的操作全部放到同一个事务中，每一步操作有错误就返回错误，没有错误最后就返回nil，事务遇到错误会回滚；
 	if err := l.svcCtx.SqlxUsersModel.TransCtx(l.ctx, func(context context.Context, session sqlx.Session) error {
-		userParam := &usermodel.ZeroUsers{}
+		userParam := &sqlx_usermodel.ZeroUsers{}
 		copier.Copy(userParam, in)
 		userParam.Password = utils.GeneratePassword(l.svcCtx.Config.DefaultConfig.DefaultPassword)
 		userParam.CreatedBy = userId
@@ -56,7 +56,7 @@ func (l *AddUserLogic) AddUser(in *ucenter.User) (*ucenter.BaseResp, error) {
 			return err
 		}
 
-		userInfoParam := &usermodel.ZeroUserInfos{}
+		userInfoParam := &sqlx_usermodel.ZeroUserInfos{}
 		copier.Copy(userInfoParam, in)
 		userInfoParam.UserId = uid
 		userInfoParam.CreatedBy = userId
