@@ -18,13 +18,13 @@ type (
 		zeroUserInfosModel
 
 		TransCtx(ctx context.Context, fn func(context context.Context, session sqlx.Session) error) error
-		Count(data *ZeroUserInfos, beginTime, endTime string) (int64, error)
-		FindPageListByParam(data *ZeroUserInfos, beginTime, endTime string, current, pageSize int64) ([]*ZeroUserInfos, error)
-		FindAllByParam(data *ZeroUserInfos) ([]*ZeroUserInfos, error)
-		FindOneByParam(data *ZeroUserInfos) (*ZeroUserInfos, error)
-		Save(ctx context.Context, data *ZeroUserInfos) (sql.Result, error)
-		Edit(ctx context.Context, data *ZeroUserInfos) (sql.Result, error)
-		DeleteData(ctx context.Context, data *ZeroUserInfos) error
+		CountCtx(ctx context.Context, data *ZeroUserInfos, beginTime, endTime string) (int64, error)
+		FindPageListByParamCtx(ctx context.Context, data *ZeroUserInfos, beginTime, endTime string, current, pageSize int64) ([]*ZeroUserInfos, error)
+		FindAllByParamCtx(ctx context.Context, data *ZeroUserInfos) ([]*ZeroUserInfos, error)
+		FindOneByParamCtx(ctx context.Context, data *ZeroUserInfos) (*ZeroUserInfos, error)
+		SaveCtx(ctx context.Context, data *ZeroUserInfos) (sql.Result, error)
+		EditCtx(ctx context.Context, data *ZeroUserInfos) (sql.Result, error)
+		DeleteDataCtx(ctx context.Context, data *ZeroUserInfos) error
 
 		TransSaveCtx(ctx context.Context, session sqlx.Session, data *ZeroUserInfos) (sql.Result, error)
 	}
@@ -40,7 +40,7 @@ func (c customZeroUserInfosModel) TransCtx(ctx context.Context, fn func(context 
 	})
 }
 
-func (c customZeroUserInfosModel) Count(data *ZeroUserInfos, beginTime, endTime string) (int64, error) {
+func (c customZeroUserInfosModel) CountCtx(ctx context.Context, data *ZeroUserInfos, beginTime, endTime string) (int64, error) {
 	sql := fmt.Sprintf("SELECT count(*) as count FROM %s WHERE deleted_flag = %d", c.table, utils.DelNo)
 	joinSql := utils.QuerySqlJoins(data)
 	beginTimeSql := ""
@@ -54,7 +54,7 @@ func (c customZeroUserInfosModel) Count(data *ZeroUserInfos, beginTime, endTime 
 	sql = sql + joinSql + beginTimeSql + endTimeSql
 
 	var count int64
-	err := c.conn.QueryRow(&count, sql)
+	err := c.conn.QueryRowCtx(ctx, &count, sql)
 	switch err {
 	case nil:
 		return count, nil
@@ -65,7 +65,7 @@ func (c customZeroUserInfosModel) Count(data *ZeroUserInfos, beginTime, endTime 
 	}
 }
 
-func (c customZeroUserInfosModel) FindPageListByParam(data *ZeroUserInfos, beginTime, endTime string, current, pageSize int64) ([]*ZeroUserInfos, error) {
+func (c customZeroUserInfosModel) FindPageListByParamCtx(ctx context.Context, data *ZeroUserInfos, beginTime, endTime string, current, pageSize int64) ([]*ZeroUserInfos, error) {
 	sql := fmt.Sprintf("SELECT %s FROM %s WHERE deleted_flag = %d", zeroUsersRows, c.table, utils.DelNo)
 	joinSql := utils.QuerySqlJoins(data)
 	beginTimeSql := ""
@@ -81,7 +81,7 @@ func (c customZeroUserInfosModel) FindPageListByParam(data *ZeroUserInfos, begin
 	sql = sql + joinSql + beginTimeSql + endTimeSql + orderSql + limitSql
 
 	var result []*ZeroUserInfos
-	err := c.conn.QueryRows(&result, sql)
+	err := c.conn.QueryRowsCtx(ctx, &result, sql)
 	switch err {
 	case nil:
 		return result, nil
@@ -92,14 +92,14 @@ func (c customZeroUserInfosModel) FindPageListByParam(data *ZeroUserInfos, begin
 	}
 }
 
-func (c customZeroUserInfosModel) FindAllByParam(data *ZeroUserInfos) ([]*ZeroUserInfos, error) {
+func (c customZeroUserInfosModel) FindAllByParamCtx(ctx context.Context, data *ZeroUserInfos) ([]*ZeroUserInfos, error) {
 	sql := fmt.Sprintf("SELECT %s FROM %s WHERE deleted_flag = %d", zeroUsersRows, c.table, utils.DelNo)
 	joinSql := utils.QuerySqlJoins(data)
 	orderSql := " ORDER BY created_at DESC"
 	sql = sql + joinSql + orderSql
 
 	var result []*ZeroUserInfos
-	err := c.conn.QueryRows(&result, sql)
+	err := c.conn.QueryRowsCtx(ctx, &result, sql)
 	switch err {
 	case nil:
 		return result, nil
@@ -110,14 +110,14 @@ func (c customZeroUserInfosModel) FindAllByParam(data *ZeroUserInfos) ([]*ZeroUs
 	}
 }
 
-func (c customZeroUserInfosModel) FindOneByParam(data *ZeroUserInfos) (*ZeroUserInfos, error) {
+func (c customZeroUserInfosModel) FindOneByParamCtx(ctx context.Context, data *ZeroUserInfos) (*ZeroUserInfos, error) {
 	sql := fmt.Sprintf("SELECT %s FROM %s WHERE deleted_flag = %d", zeroUsersRows, c.table, utils.DelNo)
 	joinSql := utils.QuerySqlJoins(data)
 	orderSql := " ORDER BY created_at DESC"
 	sql = sql + joinSql + orderSql
 
 	var result ZeroUserInfos
-	err := c.conn.QueryRow(&result, sql)
+	err := c.conn.QueryRowCtx(ctx, &result, sql)
 	switch err {
 	case nil:
 		return &result, nil
@@ -128,19 +128,19 @@ func (c customZeroUserInfosModel) FindOneByParam(data *ZeroUserInfos) (*ZeroUser
 	}
 }
 
-func (c customZeroUserInfosModel) Save(ctx context.Context, data *ZeroUserInfos) (sql.Result, error) {
+func (c customZeroUserInfosModel) SaveCtx(ctx context.Context, data *ZeroUserInfos) (sql.Result, error) {
 	saveSql := utils.SaveSqlJoins(data, c.table)
 	result, err := c.conn.ExecCtx(ctx, saveSql)
 	return result, err
 }
 
-func (c customZeroUserInfosModel) Edit(ctx context.Context, data *ZeroUserInfos) (sql.Result, error) {
+func (c customZeroUserInfosModel) EditCtx(ctx context.Context, data *ZeroUserInfos) (sql.Result, error) {
 	editSql := utils.EditSqlJoins(data, c.table, data.Id)
 	result, err := c.conn.ExecCtx(ctx, editSql)
 	return result, err
 }
 
-func (c customZeroUserInfosModel) DeleteData(ctx context.Context, data *ZeroUserInfos) error {
+func (c customZeroUserInfosModel) DeleteDataCtx(ctx context.Context, data *ZeroUserInfos) error {
 	UpdateTime := data.UpdatedAt.Format(utils.DateTimeFormat)
 	sql := fmt.Sprintf("UPDATE %s SET deleted_flag = %d,deleted_at= %s WHERE id = %d", c.table, utils.DelYes, "'"+UpdateTime+"'", data.Id)
 	_, err := c.conn.ExecCtx(ctx, sql)
