@@ -47,6 +47,7 @@ func (l *AddUserLogic) AddUser(in *ucenter.User) (*ucenter.BaseResp, error) {
 		userParam.Password = utils.GeneratePassword(l.svcCtx.Config.DefaultConfig.DefaultPassword)
 		userParam.CreatedBy = userId
 		userParam.CreatedAt = currentTime
+		userParam.DeletedFlag = 1
 		dbUserRes, err := l.svcCtx.SqlxUsersModel.TransSaveCtx(l.ctx, session, userParam)
 		if err != nil {
 			return err
@@ -61,6 +62,7 @@ func (l *AddUserLogic) AddUser(in *ucenter.User) (*ucenter.BaseResp, error) {
 		userInfoParam.UserId = uid
 		userInfoParam.CreatedBy = userId
 		userInfoParam.CreatedAt = currentTime
+		userInfoParam.DeletedFlag = 1
 		_, err = l.svcCtx.SqlxUserInfosModel.TransSaveCtx(l.ctx, session, userInfoParam)
 		if err != nil {
 			return err
