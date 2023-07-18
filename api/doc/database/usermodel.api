@@ -51,8 +51,9 @@ type (
 
 	/* 1-4 用户账号密码登录 model */
 	UserLoginPasswordModel {
-		Account  string `json:"account"`  // 账号
-		Password string `json:"password"` // 密码
+		Id       int64  `json:"id,optional"` // id
+		Account  string `json:"account"`     // 账号
+		Password string `json:"password"`    // 密码
 	}
 
 	/* 1-5 列表页返回Model[加入分页参数] */

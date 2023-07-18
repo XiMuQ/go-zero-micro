@@ -32,7 +32,7 @@ func NewLoginUserLogic(ctx context.Context, svcCtx *svc.ServiceContext) *LoginUs
 // LoginUser 用户登录
 func (l *LoginUserLogic) LoginUser(in *ucenter.User) (*ucenter.UserLoginResp, error) {
 	param := &sqlc_usermodel.ZeroUsers{
-		Id:      1, //测试缓存
+		Id:      in.Id,
 		Account: in.Account,
 	}
 	dbRes, err := l.svcCtx.SqlcUsersModel.FindOneByParamCtx(l.ctx, param)

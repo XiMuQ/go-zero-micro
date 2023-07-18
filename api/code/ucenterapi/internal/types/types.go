@@ -62,8 +62,9 @@ type UserSimpleModel struct {
 }
 
 type UserLoginPasswordModel struct {
-	Account  string `json:"account"`  // 账号
-	Password string `json:"password"` // 密码
+	Id       int64  `json:"id,optional"` // id
+	Account  string `json:"account"`     // 账号
+	Password string `json:"password"`    // 密码
 }
 
 type UserPageResp struct {
