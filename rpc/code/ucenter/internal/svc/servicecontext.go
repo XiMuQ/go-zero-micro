@@ -2,6 +2,7 @@ package svc
 
 import (
 	"fmt"
+	"github.com/zeromicro/go-zero/core/stores/redis"
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
 	"go-zero-micro/rpc/code/ucenter/internal/config"
 	sqlc_usermodel "go-zero-micro/rpc/database/sqlc/usermodel"
@@ -13,7 +14,9 @@ import (
 )
 
 type ServiceContext struct {
-	Config             config.Config
+	Config      config.Config
+	RedisClient *redis.Redis
+
 	SqlxUsersModel     sqlx_usermodel.ZeroUsersModel
 	SqlxUserInfosModel sqlx_usermodel.ZeroUserInfosModel
 
@@ -38,8 +41,13 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	//自动同步更新表结构,不要建表了O(∩_∩)O哈哈~
 	//db.AutoMigrate(&models.User{})
 
+	redisConn := redis.New(c.Redis.Host, func(r *redis.Redis) {
+		r.Type = c.Redis.Type
+		r.Pass = c.Redis.Pass
+	})
 	return &ServiceContext{
 		Config:             c,
+		RedisClient:        redisConn,
 		SqlxUsersModel:     sqlx_usermodel.NewZeroUsersModel(mysqlConn),
 		SqlxUserInfosModel: sqlx_usermodel.NewZeroUserInfosModel(mysqlConn),
 
