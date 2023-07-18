@@ -28,7 +28,8 @@ func NewLoginByPasswordLogic(ctx context.Context, svcCtx *svc.ServiceContext) *L
 func (l *LoginByPasswordLogic) LoginByPassword(req *types.UserLoginPasswordModel) (resp *types.UserLoginResp, err error) {
 	param := &ucenter.User{}
 	copier.Copy(param, req)
-	loginRes, err := l.svcCtx.UcenterSqlxRpc.LoginUser(l.ctx, param)
+	loginRes, err := l.svcCtx.UcenterGormRpc.LoginUser(l.ctx, param)
+	//loginRes, err := l.svcCtx.UcenterSqlxRpc.LoginUser(l.ctx, param)
 	if err != nil {
 		return nil, errorx.NewDefaultError(errorx.UserLoginPasswordErrorCode)
 	}
