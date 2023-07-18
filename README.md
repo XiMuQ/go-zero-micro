@@ -18,3 +18,33 @@ goctl rpc protoc ./proto/ucenter.proto --go_out=./code/ucenter --go-grpc_out=./c
 ```bash
 the output of pb.go and _grpc.pb.go must not be the same with --zrpc_out
 ```
+
+**1.3 model服务模块**
+
+1、生成sqlx代码命令
+单表：
+```bash
+goctl model mysql ddl -src="./rpc/database/sql/user/zero_users.sql" -dir="./rpc/database/sqlx/usermodel" -style=go_zero
+```
+多表：
+```bash
+goctl model mysql ddl -src="./rpc/database/sql/user/zero_*.sql" -dir="./rpc/database/sqlx/usermodel" -style=go_zero
+```
+使用数据库连接方式：
+```bash
+goctl model mysql datasource -url="root:root@tcp(127.0.0.1:3357)/go-zero-micro" -table="zero_users" -dir="./rpc/database/sqlx/usermodel"
+```
+
+2、生成sqlc代码命令
+单表：
+```bash
+goctl model mysql ddl -src="./rpc/database/sql/user/zero_users.sql" -dir="./rpc/database/sqlc/usermodel" -style=go_zero -cache
+```
+多表：
+```bash
+goctl model mysql ddl -src="./rpc/database/sql/user/zero_*.sql" -dir="./rpc/database/sqlc/usermodel" -style=go_zero -cache
+```
+使用数据库连接方式：
+```bash
+goctl model mysql datasource -url="root:root@tcp(127.0.0.1:3357)/go-zero-micro" -table="zero_users" -dir="./rpc/database/sqlc/usermodel" -cache
+```
