@@ -24,7 +24,7 @@ func main() {
 		log.Fatal(err)
 	}
 	client := asynq.NewClient(asynq.RedisClientOpt{Addr: redisAddr})
-	info, err := client.Enqueue(task)
+	info, err := client.Enqueue(task, asynq.MaxRetry(5), asynq.Timeout(1*time.Minute))
 	if err != nil {
 		log.Fatal(err)
 	}
