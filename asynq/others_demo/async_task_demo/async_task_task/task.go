@@ -4,7 +4,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/hibiken/asynq"
+	"go-zero-micro/common/utils"
 	"golang.org/x/net/context"
+	"time"
 )
 
 // 创建一个新任务类型
@@ -56,7 +58,7 @@ func (processor *AsyncEmailProcessor) ProcessTask(ctx context.Context, t *asynq.
 		return err
 	}
 	// TODO: 模拟发送邮件
-	fmt.Printf("\nAsync Server：ProcessTask：Start handle AsyncTask!\n")
+	fmt.Printf("\nAsync Server：ProcessTask：%s Start handle AsyncTask!\n", time.Now().Format(utils.DateTimeFormat))
 	fmt.Printf("Sending email to %s, subject: %s, body: %s\n", payload.To, payload.Subject, payload.Body)
 	fmt.Println("Async Server：ProcessTask：End handle AsyncTask!")
 	return nil
