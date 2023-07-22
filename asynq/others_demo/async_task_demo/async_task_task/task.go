@@ -34,8 +34,30 @@ func HandleAsyncEmailTask(ctx context.Context, task *asynq.Task) error {
 		return err
 	}
 	// TODO: 模拟发送邮件
-	fmt.Printf("\nAsync Server：Start handle AsyncTask!")
+	fmt.Printf("\nAsync Server：Start handle AsyncTask!\n")
 	fmt.Printf("Sending email to %s, subject: %s, body: %s\n", payload.To, payload.Subject, payload.Body)
 	fmt.Println("Async Server：End handle AsyncTask!")
+	return nil
+}
+
+// AsyncEmailProcessor implements asynq.Handler interface.
+type AsyncEmailProcessor struct {
+	// ... fields for struct
+}
+
+func NewAsyncEmailProcessor() *AsyncEmailProcessor {
+	return &AsyncEmailProcessor{}
+}
+
+func (processor *AsyncEmailProcessor) ProcessTask(ctx context.Context, t *asynq.Task) error {
+	var payload AsyncEmailPayload
+	if err := json.Unmarshal(t.Payload(), &payload); err != nil {
+		//return fmt.Errorf("json.Unmarshal failed: %v: %w", err, asynq.SkipRetry)
+		return err
+	}
+	// TODO: 模拟发送邮件
+	fmt.Printf("\nAsync Server：ProcessTask：Start handle AsyncTask!\n")
+	fmt.Printf("Sending email to %s, subject: %s, body: %s\n", payload.To, payload.Subject, payload.Body)
+	fmt.Println("Async Server：ProcessTask：End handle AsyncTask!")
 	return nil
 }

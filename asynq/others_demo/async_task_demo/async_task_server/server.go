@@ -27,7 +27,8 @@ func main() {
 
 	// mux maps a type to a handler
 	mux := asynq.NewServeMux()
-	mux.HandleFunc(async_task_task.AsyncEmailTask, async_task_task.HandleAsyncEmailTask)
+	//mux.HandleFunc(async_task_task.AsyncEmailTask, async_task_task.HandleAsyncEmailTask)
+	mux.Handle(async_task_task.AsyncEmailTask, async_task_task.NewAsyncEmailProcessor())
 	// ...register other handlers...
 
 	if err := srv.Run(mux); err != nil {
