@@ -1,0 +1,31 @@
+Name: zero-asynq
+Host: 0.0.0.0
+Port: 7001
+
+# UCenter 服务
+UCenterRpc:
+  Etcd:
+    Hosts:
+      - 127.0.0.1:2379
+    Key: ucenter.rpc
+  #api请求rpc服务的超时时间
+  Timeout: 600000
+
+Redis:
+  Host: 127.0.0.1:6379
+  Type: node
+  Pass: ""
+
+Log:
+  ServiceName: zero-asynq
+  Mode: file
+  Path: projects/logs/go-zero-micro/zero-asynq
+  Level: error
+  Compress: true
+  KeepDays: 180
+
+#监控
+Prometheus:
+  Host: 0.0.0.0
+  Port: 4010
+  Path: /metrics
